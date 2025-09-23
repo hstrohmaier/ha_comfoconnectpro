@@ -1,5 +1,5 @@
 # HaComfoConnectPRO - Component
-<img src="https://github.com/mbuchber/ha_comfoconnectpro/blob/b3bb7d035f186dd6520c8395d5a5111821dac922/comfoconnectpro.png"  width="512">
+![Zehnder logo](/zehnder.png)
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 ![Version](https://img.shields.io/github/v/release/hstrohmaier/ha_comfoconnectpro?style=plastic)
