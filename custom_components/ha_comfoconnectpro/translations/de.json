@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "port": "Port",
+          "hostid": "Host ID",
+          "scan_interval": "Abfrage-Intervall"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "hostid": "Host ID",
+          "scan_interval": "Abfrage-Intervall"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+    "domain": "ha_comfoconnectpro",
+    "name": "HaComfoConnectPRO",
+    "version": "1.0.0",
+    "documentation": "https://github.com/hstrohmaier/ha_comfoconnectpro/#readme",
+    "requirements": [
+        "pymodbus"
+    ],
+    "codeowners": [
+        "@hstrohmaier"
+    ],
+    "iot_class": "local_polling",
+    "config_flow": true,
+    "dependencies": [],
+    "issue_tracker": "https://github.com/hstrohmaier/ha_comfoconnectpro/issues"
+}
