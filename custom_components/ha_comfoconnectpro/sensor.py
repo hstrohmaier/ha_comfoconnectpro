@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up ComfoConnectPRO sensor entities from config entry."""
+    """Set up Zehnder ComfoConnect PRO sensor entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -25,7 +25,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class ComfoConnectPROSensor(HubBackedEntity, SensorEntity):
-    """ComfoConnectPRO Modbus sensor entity."""
+    """Zehnder ComfoConnect PRO Modbus sensor entity."""
 
     entity_description: HaComfoConnectPROSensorEntityDescription
 
@@ -35,4 +35,4 @@ class ComfoConnectPROSensor(HubBackedEntity, SensorEntity):
         """Map hub payload to native_value."""
         self._attr_native_value = payload
 
-    #async def async_set_... entfällt, da r/o
+    # async def async_set_... entfällt, da r/o

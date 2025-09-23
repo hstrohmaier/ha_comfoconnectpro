@@ -1,4 +1,4 @@
-# ComfoConnectPRO - Component
+# Zehnder ComfoConnect PRO - Component
 ![Zehnder logo](/zehnder.png)
 
 ## Build Status
@@ -12,7 +12,7 @@
 ![Version](https://img.shields.io/github/v/release/hstrohmaier/ha_comfoconnectpro?style=plastic)
 ![Downloads](https://img.shields.io/github/downloads/hstrohmaier/ha_comfoconnectpro/total)
 
-Home Assistant Custom Component for Zehnder ComfoConnectPRO interface. 
+Home Assistant Custom Component for Zehnder Zehnder ComfoConnect PRO interface. 
 
 ![Example screenshot of dashboard](/Screenshot.png)
 
@@ -31,8 +31,8 @@ Use the URL: https://github.com/hstrohmaier/ha_comfoconnectpro
 Copy all files from custom_components/ha_comfoconnectpro/ to custom_components/ha_comfoconnectpro/ inside your config Home Assistant directory.
 
 ### Prerequisites
-- Ownership of a ComfoConnectPRO interface and ComfoAir Q 350 series
-- Network connection to the ComfoConnectPRO interface (Modbus-TCP)
+- Ownership of a Zehnder ComfoConnect PRO interface and ComfoAir Q 350 series
+- Network connection to the Zehnder ComfoConnect PRO interface (Modbus-TCP)
 
 ## Configuration via UI
 When adding the component to the Home Assistant intance, the config dialog will ask for Name, Host/IP-Address and Slave ID of the interface and the port number (usually 502 for Modbus over TCP)
@@ -41,8 +41,8 @@ When adding the component to the Home Assistant intance, the config dialog will 
 
 The integration creates multiple entities for recieving that states of the ventilation and for controlling mode.
 
-## Activating Modbus-TCP using ComfoConnectPRO Webinterface
-- Go to the default web page of your ComfoConnectPRO. (Served on port 80 of Interface-IP address)
+## Activating Modbus-TCP using Zehnder ComfoConnect PRO Webinterface
+- Go to the default web page of your Zehnder ComfoConnect PRO. (Served on port 80 of Interface-IP address)
 - Login as admin
 - Press 'Protocols and Services'
 - Select 3rd Party Protocols, choose 'ModBus TCP'

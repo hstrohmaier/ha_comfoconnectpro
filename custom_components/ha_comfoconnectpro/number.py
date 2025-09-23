@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up ComfoConnectPRO number entities from config entry."""
+    """Set up Zehnder ComfoConnect PRO number entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -25,7 +25,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class ComfoConnectPRONumber(HubBackedEntity, NumberEntity):
-    """ComfoConnectPRO Modbus number entity (rw)."""
+    """Zehnder ComfoConnect PRO Modbus number entity (rw)."""
 
     entity_description: HaComfoConnectPRONumberEntityDescription
 

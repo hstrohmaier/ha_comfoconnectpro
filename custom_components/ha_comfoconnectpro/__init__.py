@@ -1,4 +1,4 @@
-"""The ComfoConnectPRO integration."""
+"""The Zehnder ComfoConnect PRO integration."""
 
 from __future__ import annotations
 
@@ -10,9 +10,11 @@ from typing import Any, Dict, Iterable, Tuple, Optional
 
 
 from pymodbus.client import ModbusTcpClient
-#from pymodbus.payload import Endian
+
+# from pymodbus.payload import Endian
 from pymodbus.exceptions import ConnectionException
-#from pymodbus.payload import BinaryPayloadDecoder
+
+# from pymodbus.payload import BinaryPayloadDecoder
 import voluptuous as vol
 
 from homeassistant.helpers.entity import Entity
@@ -22,7 +24,7 @@ from homeassistant.const import (
     CONF_NAME,
     CONF_PORT,
     CONF_SCAN_INTERVAL,
-    #CONF_DEVICE,
+    # CONF_DEVICE,
     Platform,
 )
 from homeassistant.core import HomeAssistant, callback
@@ -30,13 +32,39 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.event import async_track_time_interval
 
 from . import const
-from .const import DEFAULT_NAME, DEFAULT_SCAN_INTERVAL, DOMAIN, CONF_HOSTID, \
-        ENTITIES_DICT, BINARYSENSOR_TYPES, SENSOR_TYPES, SELECT_TYPES, CLIMATE_TYPES, NUMBER_TYPES, BINARY_TYPES, \
-        get_entity_switch, get_entity_type, get_entity_select, get_entity_factor, get_entity_max, get_entity_min, get_entity_reg, get_entity_props, \
-        is_entity_readonly, is_entity_switch, is_entity_select, is_entity_climate, \
-        C_MIN_INPUT_REGISTER, C_MAX_INPUT_REGISTER, C_MIN_HOLDING_REGISTER, C_MAX_HOLDING_REGISTER, \
-        C_MIN_COILS, C_MAX_COILS, C_MIN_DISCRETE_INPUTS, C_MAX_DISCRETE_INPUTS
-
+from .const import (
+    DEFAULT_NAME,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    CONF_HOSTID,
+    ENTITIES_DICT,
+    BINARYSENSOR_TYPES,
+    SENSOR_TYPES,
+    SELECT_TYPES,
+    CLIMATE_TYPES,
+    NUMBER_TYPES,
+    BINARY_TYPES,
+    get_entity_switch,
+    get_entity_type,
+    get_entity_select,
+    get_entity_factor,
+    get_entity_max,
+    get_entity_min,
+    get_entity_reg,
+    get_entity_props,
+    is_entity_readonly,
+    is_entity_switch,
+    is_entity_select,
+    is_entity_climate,
+    C_MIN_INPUT_REGISTER,
+    C_MAX_INPUT_REGISTER,
+    C_MIN_HOLDING_REGISTER,
+    C_MAX_HOLDING_REGISTER,
+    C_MIN_COILS,
+    C_MAX_COILS,
+    C_MIN_DISCRETE_INPUTS,
+    C_MAX_DISCRETE_INPUTS,
+)
 
 
 import logging
@@ -46,22 +74,22 @@ _LOGGER.setLevel(logging.DEBUG)
 _LOGGER.info("ha_comfoconnectpro loaded")
 
 PLATFORMS = [
-                Platform.BINARY_SENSOR, # BINARYSENSOR_TYPES (r/o)
-                Platform.SENSOR,        # SENSOR_TYPES (r/o)
-                Platform.SELECT,        # SELECT_TYPES (r/w)
-                Platform.SWITCH,        # BINARY_TYPES (r/w)
-                Platform.CLIMATE,       # CLIMATE_TYPES (r/w)
-                Platform.NUMBER        # NUMBER_TYPES (r/w)
-             ]
+    Platform.BINARY_SENSOR,  # BINARYSENSOR_TYPES (r/o)
+    Platform.SENSOR,  # SENSOR_TYPES (r/o)
+    Platform.SELECT,  # SELECT_TYPES (r/w)
+    Platform.SWITCH,  # BINARY_TYPES (r/w)
+    Platform.CLIMATE,  # CLIMATE_TYPES (r/w)
+    Platform.NUMBER,  # NUMBER_TYPES (r/w)
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up a ComfoConnectPRO modbus."""
+    """Set up a Zehnder ComfoConnect PRO modbus."""
     _LOGGER.info(entry)
     host = entry.data.get(CONF_HOST)
     name = entry.data.get(CONF_NAME)
     port = entry.data.get(CONF_PORT)
-    scan_interval= entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     if scan_interval < 5:
         scan_interval = DEFAULT_SCAN_INTERVAL
     hostid = entry.data.get(CONF_HOSTID)
@@ -78,7 +106,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 
 async def async_unload_entry(hass, entry):
-    """Unload ComfoConnectPRO modbus entry."""
+    """Unload Zehnder ComfoConnect PRO modbus entry."""
     unload_ok = all(
         await asyncio.gather(
             *[
@@ -116,7 +144,6 @@ class HaComfoConnectPROModbusHub:
         self._unsub_interval_method = None
         self._sensors = []
         self.data: Dict[str, Any] = {}
-
 
     @callback
     def async_add_hacomfoconnectpro_modbus_sensor(self, update_callback):
@@ -167,7 +194,6 @@ class HaComfoConnectPROModbusHub:
         with self._lock:
             self._client.connect()
 
-
     # ---- Helper ----------------------------------------------------------
 
     # ---- Switches ----------------------------------------------------------
@@ -187,9 +213,10 @@ class HaComfoConnectPROModbusHub:
         off_v = m.get("off", 0)
         return "off" if raw == off_v else "on"
 
-
     # ---- Numerische Werte ----------------------------------------------------------
-    def _encode_numeric(self, value: float, faktor: float, min_v: float | None, max_v: float | None) -> int:
+    def _encode_numeric(
+        self, value: float, faktor: float, min_v: float | None, max_v: float | None
+    ) -> int:
         """
         Skaliert den Wert mit FAKTOR und gibt eine ganzzahlige Registerdarstellung zurück.
         Begrenzung erfolgt auf MIN und MAX (ebenfalls skaliert).
@@ -202,7 +229,6 @@ class HaComfoConnectPROModbusHub:
             raise ValueError("FAKTOR darf nicht 0 sein.")
 
         return round(value / faktor)
-
 
     def _decode_numeric(self, props: Dict[str, Any], raw: int) -> float:
         """Rohwert -> physikalischer Wert mittels FAKTOR (raw * faktor)."""
@@ -221,10 +247,8 @@ class HaComfoConnectPROModbusHub:
         return {
             "temperature": value,
             "target_temp_low": min_value,
-            "target_temp_high": max_value
+            "target_temp_high": max_value,
         }
-
-
 
     # ---- Select Werte ----------------------------------------------------------
     def _encode_select(self, props: Dict[str, Any], value: Any) -> int:
@@ -239,14 +263,18 @@ class HaComfoConnectPROModbusHub:
             for k, v in inv.items():
                 if k.lower() == value.lower():
                     return int(v)
-            raise ValueError(f"Unbekannte Option '{value}'. Zulässig: {list(inv.keys())}")
+            raise ValueError(
+                f"Unbekannte Option '{value}'. Zulässig: {list(inv.keys())}"
+            )
         # index (int) direkt
         try:
             iv = int(value)
         except Exception as e:
             raise ValueError(f"Ungültiger Select-Wert: {value!r}") from e
         if iv not in {k for k in values.keys() if isinstance(k, int)}:
-            raise ValueError(f"Index {iv} nicht in VALUES: {sorted(k for k in values.keys() if isinstance(k, int))}")
+            raise ValueError(
+                f"Index {iv} nicht in VALUES: {sorted(k for k in values.keys() if isinstance(k, int))}"
+            )
         return iv
 
     def _decode_select(self, props: Dict[str, Any], raw: int) -> str | None:
@@ -257,7 +285,7 @@ class HaComfoConnectPROModbusHub:
         values: Dict[Any, Any] = get_entity_select(props) or {}
         return values.get(raw, f"Ungültiger Wert: {raw}")
 
-# ***************************************** SCHREIBEN **************************************************************
+    # ***************************************** SCHREIBEN **************************************************************
 
     async def write_entity_value(self, entity_key: str, value: Any) -> None:
         """
@@ -270,12 +298,14 @@ class HaComfoConnectPROModbusHub:
         """
 
         _LOGGER.info(f"Schreibe Entität {entity_key} -> {value}")
-        print (f"write_entity_value: {entity_key} -> {value}")
+        print(f"write_entity_value: {entity_key} -> {value}")
 
         # Props finden
         props = get_entity_props(entity_key)
         if not props:
-            raise ValueError(f"Ungültige Entität {entity_key}. Definition in ENTITIES_DICT nicht gefunden.")
+            raise ValueError(
+                f"Ungültige Entität {entity_key}. Definition in ENTITIES_DICT nicht gefunden."
+            )
         if is_entity_readonly(props):
             raise PermissionError(f"Register {entity_key} ist read-only.")
 
@@ -291,10 +321,20 @@ class HaComfoConnectPROModbusHub:
         elif is_entity_select(props):
             raw = self._encode_select(props, value)
         elif is_entity_climate(props):
-            raw = self._encode_numeric(float(value["temperature"]), get_entity_factor(props), get_entity_min(props), get_entity_max(props))
+            raw = self._encode_numeric(
+                float(value["temperature"]),
+                get_entity_factor(props),
+                get_entity_min(props),
+                get_entity_max(props),
+            )
         else:
             # numerisch
-            raw = self._encode_numeric(float(value), get_entity_factor(props), get_entity_min(props), get_entity_max(props))
+            raw = self._encode_numeric(
+                float(value),
+                get_entity_factor(props),
+                get_entity_min(props),
+                get_entity_max(props),
+            )
 
         if dt == ModbusTcpClient.DATATYPE.BITS:
             reg_words = (bool(raw),)
@@ -311,10 +351,11 @@ class HaComfoConnectPROModbusHub:
     async def setter_function_callback(self, entity: Entity, option):
         await self.write_entity_value(entity.entity_description.key, option)
 
+    # ***************************************** LESEN **************************************************************
 
-# ***************************************** LESEN **************************************************************
-
-    def read_entity_value(self, buf: list[int|bool], idx: int, dt: ModbusTcpClient.DATATYPE):
+    def read_entity_value(
+        self, buf: list[int | bool], idx: int, dt: ModbusTcpClient.DATATYPE
+    ):
         if buf:
             if dt == ModbusTcpClient.DATATYPE.BITS:
                 dtlen = 1
@@ -323,81 +364,111 @@ class HaComfoConnectPROModbusHub:
             buflen = len(buf)
             out_of_bounds = (idx < 0) or (idx + dtlen > buflen)
             if out_of_bounds:
-                raise ValueError("Puffer hat nur {buflen} Elemente und ist damit zu klein zum Lesen von {dtlen} Elementen ab Index {idx}!!")
+                raise ValueError(
+                    "Puffer hat nur {buflen} Elemente und ist damit zu klein zum Lesen von {dtlen} Elementen ab Index {idx}!!"
+                )
             else:
                 if dt == ModbusTcpClient.DATATYPE.BITS:
                     return buf[idx]
                 else:
-                    return self._client.convert_from_registers(registers=buf[idx:idx+dtlen], data_type=dt)
+                    return self._client.convert_from_registers(
+                        registers=buf[idx : idx + dtlen], data_type=dt
+                    )
         else:
-            raise ValueError("Puffer hat keine Elemente. Fehler in Definition const.ENTITIES_DICT!!")
-
+            raise ValueError(
+                "Puffer hat keine Elemente. Fehler in Definition const.ENTITIES_DICT!!"
+            )
 
     def read_modbus_registers(self):
         """Read from modbus registers"""
 
         if C_MAX_INPUT_REGISTER >= C_MIN_INPUT_REGISTER:
-            _LOGGER.debug(f"Lese Input-Register {C_MIN_INPUT_REGISTER} bis {C_MAX_INPUT_REGISTER}...")
+            _LOGGER.debug(
+                f"Lese Input-Register {C_MIN_INPUT_REGISTER} bis {C_MAX_INPUT_REGISTER}..."
+            )
             with self._lock:
-                modbusdata_input = self._client.read_input_registers(address=C_MIN_INPUT_REGISTER,
-                                                                    count=C_MAX_INPUT_REGISTER-C_MIN_INPUT_REGISTER+1,
-                                                                    device_id=self._hostid)
-                if modbusdata_input is None or not hasattr(modbusdata_input, "registers"):
+                modbusdata_input = self._client.read_input_registers(
+                    address=C_MIN_INPUT_REGISTER,
+                    count=C_MAX_INPUT_REGISTER - C_MIN_INPUT_REGISTER + 1,
+                    device_id=self._hostid,
+                )
+                if modbusdata_input is None or not hasattr(
+                    modbusdata_input, "registers"
+                ):
                     _LOGGER.error("Fehler beim Lesen der Input-Register.")
                     return False
-                _LOGGER.debug(f"{len(modbusdata_input.registers)} Input-Register: {modbusdata_input.registers}")
+                _LOGGER.debug(
+                    f"{len(modbusdata_input.registers)} Input-Register: {modbusdata_input.registers}"
+                )
                 input_regs = modbusdata_input.registers
         else:
             _LOGGER.error("Keine Input-Register definiert.")
             input_regs = None
 
         if C_MAX_HOLDING_REGISTER >= C_MIN_HOLDING_REGISTER:
-            _LOGGER.debug(f"Lese Holding-Register {C_MIN_HOLDING_REGISTER} bis {C_MAX_HOLDING_REGISTER}...")
+            _LOGGER.debug(
+                f"Lese Holding-Register {C_MIN_HOLDING_REGISTER} bis {C_MAX_HOLDING_REGISTER}..."
+            )
             with self._lock:
-                modbusdata_holding = self._client.read_holding_registers(address=C_MIN_HOLDING_REGISTER,
-                                                                        count=C_MAX_HOLDING_REGISTER-C_MIN_HOLDING_REGISTER+1,
-                                                                        device_id=self._hostid)
-                if modbusdata_holding is None or not hasattr(modbusdata_holding, "registers"):
+                modbusdata_holding = self._client.read_holding_registers(
+                    address=C_MIN_HOLDING_REGISTER,
+                    count=C_MAX_HOLDING_REGISTER - C_MIN_HOLDING_REGISTER + 1,
+                    device_id=self._hostid,
+                )
+                if modbusdata_holding is None or not hasattr(
+                    modbusdata_holding, "registers"
+                ):
                     _LOGGER.error("Fehler beim Lesen der Holding-Register.")
                     return False
-                _LOGGER.debug(f"{len(modbusdata_holding.registers)} Holding-Register: {modbusdata_holding.registers}")
+                _LOGGER.debug(
+                    f"{len(modbusdata_holding.registers)} Holding-Register: {modbusdata_holding.registers}"
+                )
                 holding_regs = modbusdata_holding.registers
         else:
             _LOGGER.error("Keine Holding-Register definiert.")
             holding_regs = None
 
-
         if C_MAX_COILS >= C_MIN_COILS:
             _LOGGER.debug(f"Lese Coils {C_MIN_COILS} bis {C_MAX_COILS}...")
             with self._lock:
-                modbusdata_coils = self._client.read_coils(address=C_MIN_COILS,
-                                                                        count=C_MAX_COILS-C_MIN_COILS+1,
-                                                                        device_id=self._hostid)
+                modbusdata_coils = self._client.read_coils(
+                    address=C_MIN_COILS,
+                    count=C_MAX_COILS - C_MIN_COILS + 1,
+                    device_id=self._hostid,
+                )
                 if modbusdata_coils is None or not hasattr(modbusdata_coils, "bits"):
                     _LOGGER.error("Fehler beim Lesen der Coils.")
                     return False
-                _LOGGER.debug(f"{len(modbusdata_coils.bits)} Coils: {modbusdata_coils.bits}")
+                _LOGGER.debug(
+                    f"{len(modbusdata_coils.bits)} Coils: {modbusdata_coils.bits}"
+                )
                 coils = modbusdata_coils.bits
         else:
             _LOGGER.error("Keine Coils definiert.")
             coils = None
 
-
         if C_MAX_DISCRETE_INPUTS >= C_MIN_DISCRETE_INPUTS:
-            _LOGGER.debug(f"Lese Discrete Inputs {C_MIN_DISCRETE_INPUTS} bis {C_MAX_DISCRETE_INPUTS} ...")
+            _LOGGER.debug(
+                f"Lese Discrete Inputs {C_MIN_DISCRETE_INPUTS} bis {C_MAX_DISCRETE_INPUTS} ..."
+            )
             with self._lock:
-                modbusdata_discrete = self._client.read_discrete_inputs(address=C_MIN_DISCRETE_INPUTS,
-                                                                        count=C_MAX_DISCRETE_INPUTS-C_MIN_DISCRETE_INPUTS+1,
-                                                                        device_id=self._hostid)
-                if modbusdata_discrete is None or not hasattr(modbusdata_discrete, "bits"):
+                modbusdata_discrete = self._client.read_discrete_inputs(
+                    address=C_MIN_DISCRETE_INPUTS,
+                    count=C_MAX_DISCRETE_INPUTS - C_MIN_DISCRETE_INPUTS + 1,
+                    device_id=self._hostid,
+                )
+                if modbusdata_discrete is None or not hasattr(
+                    modbusdata_discrete, "bits"
+                ):
                     _LOGGER.error("Fehler beim Lesen der Discrete Inputs.")
                     return False
-                _LOGGER.debug(f"{len(modbusdata_discrete.bits)} Discrete Inputs: {modbusdata_discrete.bits}")
+                _LOGGER.debug(
+                    f"{len(modbusdata_discrete.bits)} Discrete Inputs: {modbusdata_discrete.bits}"
+                )
                 discrete = modbusdata_discrete.bits
         else:
             _LOGGER.error("Keine Discrete Inputs definiert.")
             discrete = None
-
 
         for entity_key, props in ENTITIES_DICT.items():
             reg_type = get_entity_type(props)
@@ -409,11 +480,17 @@ class HaComfoConnectPROModbusHub:
                 case const.C_REG_TYPE_COILS:
                     raw = self.read_entity_value(coils, reg - C_MIN_COILS, dt)
                 case const.C_REG_TYPE_DISCRETE_INPUTS:
-                    raw = self.read_entity_value(discrete, reg - C_MIN_DISCRETE_INPUTS, dt)
+                    raw = self.read_entity_value(
+                        discrete, reg - C_MIN_DISCRETE_INPUTS, dt
+                    )
                 case const.C_REG_TYPE_INPUT_REGISTERS:
-                    raw = self.read_entity_value(input_regs, reg - C_MIN_INPUT_REGISTER, dt)
+                    raw = self.read_entity_value(
+                        input_regs, reg - C_MIN_INPUT_REGISTER, dt
+                    )
                 case const.C_REG_TYPE_HOLDING_REGISTERS:
-                    raw = self.read_entity_value(holding_regs, reg - C_MIN_HOLDING_REGISTER, dt)
+                    raw = self.read_entity_value(
+                        holding_regs, reg - C_MIN_HOLDING_REGISTER, dt
+                    )
 
             if is_entity_switch(props):
                 value = self._decode_switch(props, raw)
@@ -432,9 +509,11 @@ class HaComfoConnectPROModbusHub:
         _LOGGER.info("Lesen der Register erfolgreich abgeschlossen.")
         return True
 
-# ***************************************** SCHREIBEN **************************************************************
+    # ***************************************** SCHREIBEN **************************************************************
 
-    async def _write_modbus_registers(self, base_reg: int, reg_values: Iterable[int], dt: ModbusTcpClient.DATATYPE):
+    async def _write_modbus_registers(
+        self, base_reg: int, reg_values: Iterable[int], dt: ModbusTcpClient.DATATYPE
+    ):
         """
         Schreibt eine Sequenz 16-bit Registerwerte ab base_reg.
 
@@ -445,11 +524,12 @@ class HaComfoConnectPROModbusHub:
         _LOGGER.info(f"Schreibzugriff auf Register {base_reg}: {reg_values}")
         for offset, word in enumerate(reg_values):
             if dt == ModbusTcpClient.DATATYPE.BITS:
-                self._client.write_coil(address=base_reg + offset, value=bool(word), device_id=self._hostid)
+                self._client.write_coil(
+                    address=base_reg + offset, value=bool(word), device_id=self._hostid
+                )
             else:
-                self._client.write_register(address=base_reg + offset, value=int(word) & 0xFFFF, device_id=self._hostid)
-
-
-
-
-
+                self._client.write_register(
+                    address=base_reg + offset,
+                    value=int(word) & 0xFFFF,
+                    device_id=self._hostid,
+                )

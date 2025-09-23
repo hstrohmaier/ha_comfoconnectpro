@@ -19,7 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up ComfoConnectPRO climate entities from config entry."""
+    """Set up Zehnder ComfoConnect PRO climate entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -30,7 +30,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class ComfoConnectPROClimate(HubBackedEntity, ClimateEntity):
-    """ComfoConnectPRO Modbus Climate (reiner Sollwert-Steller)."""
+    """Zehnder ComfoConnect PRO Modbus Climate (reiner Sollwert-Steller)."""
 
     entity_description: HaComfoConnectPROClimateEntityDescription
 
@@ -107,4 +107,3 @@ class ComfoConnectPROClimate(HubBackedEntity, ClimateEntity):
             self._attr_target_temperature_high = float(kwargs["target_temp_high"])
 
         await self._hub.setter_function_callback(self, kwargs)
-

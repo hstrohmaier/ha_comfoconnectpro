@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up ComfoConnectPRO binary sensor entities from config entry."""
+    """Set up Zehnder ComfoConnect PRO binary sensor entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -26,7 +26,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class ComfoConnectPROBinarySensor(HubBackedEntity, BinarySensorEntity):
-    """ComfoConnectPRO binary sensor (read-only switch states)."""
+    """Zehnder ComfoConnect PRO binary sensor (read-only switch states)."""
 
     entity_description: HaComfoConnectPROBinarySensorEntityDescription
     _attr_is_on: Optional[bool] = None
@@ -41,11 +41,9 @@ class ComfoConnectPROBinarySensor(HubBackedEntity, BinarySensorEntity):
         if payload is None:
             return
         if isinstance(payload, str):
-            self._attr_is_on = (payload.lower() != "off")
+            self._attr_is_on = payload.lower() != "off"
         else:
             # Fallback: truthy -> on
             self._attr_is_on = bool(payload)
 
-    #async def async_set_... entfällt, da r/o
-
-
+    # async def async_set_... entfällt, da r/o

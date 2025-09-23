@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up ComfoConnectPRO select entities from config entry."""
+    """Set up Zehnder ComfoConnect PRO select entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -26,13 +26,19 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class ComfoConnectPROSelect(HubBackedEntity, SelectEntity):
-    """ComfoConnectPRO select entity."""
+    """Zehnder ComfoConnect PRO select entity."""
 
     entity_description: HaComfoConnectPROSelectEntityDescription
     _attr_current_option: Optional[str]
     _setter_function: Optional[Any]
 
-    def __init__(self, platform_name, hub, device_info, description: HaComfoConnectPROSelectEntityDescription):
+    def __init__(
+        self,
+        platform_name,
+        hub,
+        device_info,
+        description: HaComfoConnectPROSelectEntityDescription,
+    ):
         super().__init__(platform_name, hub, device_info, description)
         # Optionen & Default aus der Description übernehmen
         self._attr_options = description.select_options or []
@@ -50,5 +56,8 @@ class ComfoConnectPROSelect(HubBackedEntity, SelectEntity):
         if isinstance(payload, str):
             self._attr_current_option = payload
         elif payload is not None:
-            _LOGGER.debug("Select %s: unerwartete Payload %r – ignoriere",
-                          self.entity_description.key, payload)
+            _LOGGER.debug(
+                "Select %s: unerwartete Payload %r – ignoriere",
+                self.entity_description.key,
+                payload,
+            )

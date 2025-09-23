@@ -34,6 +34,7 @@ from homeassistant.const import (
 from pymodbus.client import ModbusTcpClient
 
 import logging
+
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
 _LOGGER.info("ha_comfoconnectpro loaded")
@@ -43,13 +44,13 @@ thismodule = sys.modules[__name__]
 
 
 DOMAIN = "ha_comfoconnectpro"
-DEFAULT_NAME = "ComfoConnectPRO Interface"
+DEFAULT_NAME = "ComfoConnect PRO Interface"
 DEFAULT_SCAN_INTERVAL = 15
 DEFAULT_PORT = 502
 DEFAULT_HOSTID = 1
 CONF_HOSTID = "hostid"
 CONF_HUB = "hacomfoconnectpro_hub"
-ATTR_MANUFACTURER = "ComfoConnectPRO"
+ATTR_MANUFACTURER = "Zehnder"
 
 
 # ------------------------------------------------------------
@@ -188,7 +189,7 @@ ERROR_DICT: Dict[str, Any] = {
     C_COMFONET_ERR: "Fehler auf dem ComfoNet-Bus",
     C_CO2_SENS_COUNT_ERR: "Die Anzahl der CO2-Sensoren an einem Controller hat sich verringert - ein oder mehrere Sensoren werden nicht mehr erkannt",
     C_CO2_SENS_TOO_MANY_ERR: "Mehr als 8 Sensoren werden in einer Zone erkannt",
-    C_CO2_SENS_GENERAL_ERR: "Allgemeiner CO2-Sensor-Fehler"
+    C_CO2_SENS_GENERAL_ERR: "Allgemeiner CO2-Sensor-Fehler",
 }
 
 # --- Konstanten ---
@@ -298,7 +299,7 @@ C_COMFOCOOL = "comfocool"
 # Modbus-Register gemäß Zehnder_CSY_ComfoConnect-Pro_INM_DE-de.pdf vom 24.09.2024
 # Achtung: Register sind in der Dokumentation mit 1 beginnend nummeriert und es wird darauf verwiesen,
 # dass in der PDU Register mit Null beginnend adressiert werden (1-16 -> 0-15). Daher ist beim REG-Wert immer den Wert aus der Doku um eins reduzieren.
-# Getestet mit ComfoConnectPRO  RCG 2.0.0.10
+# Getestet mit Zehnder ComfoConnect PRO  RCG 2.0.0.10
 
 # --- ENTITIES_DICT ---
 ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
@@ -313,120 +314,210 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
             40: "CAQ-Version nicht kompatibel",
             50: "keine Lüftungseinheit erkannt",
         },
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_ACTIVEERROR1: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 1, "NAME": "Fehler 1",
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 1,
+        "NAME": "Fehler 1",
         "VALUES": ERROR_DICT,
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_ACTIVEERROR2: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 2, "NAME": "Fehler 2",
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 2,
+        "NAME": "Fehler 2",
         "VALUES": ERROR_DICT,
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_ACTIVEERROR3: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 3, "NAME": "Fehler 3",
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 3,
+        "NAME": "Fehler 3",
         "VALUES": ERROR_DICT,
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_ACTIVEERROR4: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 4, "NAME": "Fehler 4",
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 4,
+        "NAME": "Fehler 4",
         "VALUES": ERROR_DICT,
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_ACTIVEERROR5: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 5, "NAME": "Fehler 5",
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 5,
+        "NAME": "Fehler 5",
         "VALUES": ERROR_DICT,
-        "DT": C_DT_UINT16
+        "DT": C_DT_UINT16,
     },
     C_AIRFLOW: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 6, "NAME": "Zuluft Ventilator-Volumen ", "UNIT": "m³", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 6,
+        "NAME": "Zuluft Ventilator-Volumen ",
+        "UNIT": "m³",
+        "DT": C_DT_UINT16,
     },
     C_ROOM_TEMPERATURE: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 7, "NAME": "Raumlufttemperatur",
-        "FAKTOR": 0.1, "UNIT": "°C", "DT": C_DT_INT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 7,
+        "NAME": "Raumlufttemperatur",
+        "FAKTOR": 0.1,
+        "UNIT": "°C",
+        "DT": C_DT_INT16,
     },
     C_EXTRACT_TEMPERATURE: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 8, "NAME": "Fortlufttemperatur",
-        "FAKTOR": 0.1, "UNIT": "°C", "DT": C_DT_INT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 8,
+        "NAME": "Fortlufttemperatur",
+        "FAKTOR": 0.1,
+        "UNIT": "°C",
+        "DT": C_DT_INT16,
     },
     C_EXHAUST_TEMPERATURE: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 9, "NAME": "Ablufttemperatur",
-        "FAKTOR": 0.1, "UNIT": "°C", "DT": C_DT_INT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 9,
+        "NAME": "Ablufttemperatur",
+        "FAKTOR": 0.1,
+        "UNIT": "°C",
+        "DT": C_DT_INT16,
     },
     C_OUTDOOR_TEMPERATURE: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 10, "NAME": "Außenlufttemperatur",
-        "FAKTOR": 0.1, "UNIT": "°C", "DT": C_DT_INT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 10,
+        "NAME": "Außenlufttemperatur",
+        "FAKTOR": 0.1,
+        "UNIT": "°C",
+        "DT": C_DT_INT16,
     },
     C_SUPPLY_TEMPERATURE: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 11, "NAME": "Zulufttemperatur",
-        "FAKTOR": 0.1, "UNIT": "°C", "DT": C_DT_INT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 11,
+        "NAME": "Zulufttemperatur",
+        "FAKTOR": 0.1,
+        "UNIT": "°C",
+        "DT": C_DT_INT16,
     },
     C_ROOM_HUMIDITY: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 12, "NAME": "Raumluftfeuchtigkeit", "UNIT": "%", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 12,
+        "NAME": "Raumluftfeuchtigkeit",
+        "UNIT": "%",
+        "DT": C_DT_UINT16,
     },
     C_EXTRACT_HUMIDITY: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 13, "NAME": "Fortluftfeuchtigkeit", "UNIT": "%", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 13,
+        "NAME": "Fortluftfeuchtigkeit",
+        "UNIT": "%",
+        "DT": C_DT_UINT16,
     },
     C_EXHAUST_HUMIDITY: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 14, "NAME": "Abluftfeuchtigkeit", "UNIT": "%", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 14,
+        "NAME": "Abluftfeuchtigkeit",
+        "UNIT": "%",
+        "DT": C_DT_UINT16,
     },
     C_OUTDOOR_HUMIDITY: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 15, "NAME": "Außenluftfeuchtigkeit", "UNIT": "%", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 15,
+        "NAME": "Außenluftfeuchtigkeit",
+        "UNIT": "%",
+        "DT": C_DT_UINT16,
     },
     C_SUPPLY_HUMIDITY: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 16, "NAME": "Zuluftfeuchtigkeit", "UNIT": "%", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 16,
+        "NAME": "Zuluftfeuchtigkeit",
+        "UNIT": "%",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_1: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 17, "NAME": "CO2 Sensor Zone 1", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 17,
+        "NAME": "CO2 Sensor Zone 1",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_2: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 18, "NAME": "CO2 Sensor Zone 2", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 18,
+        "NAME": "CO2 Sensor Zone 2",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_3: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 19, "NAME": "CO2 Sensor Zone 3", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 19,
+        "NAME": "CO2 Sensor Zone 3",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_4: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 20, "NAME": "CO2 Sensor Zone 4", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 20,
+        "NAME": "CO2 Sensor Zone 4",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_5: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 21, "NAME": "CO2 Sensor Zone 5", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 21,
+        "NAME": "CO2 Sensor Zone 5",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_6: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 22, "NAME": "CO2 Sensor Zone 6", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 22,
+        "NAME": "CO2 Sensor Zone 6",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_7: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 23, "NAME": "CO2 Sensor Zone 7", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 23,
+        "NAME": "CO2 Sensor Zone 7",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_CO2_SENSOR_ZONE_8: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 24, "NAME": "CO2 Sensor Zone 8", "UNIT": "ppm", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 24,
+        "NAME": "CO2 Sensor Zone 8",
+        "UNIT": "ppm",
+        "DT": C_DT_UINT16,
     },
     C_FILTER_DAYS_REMAINING: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 25, "NAME": "Filter ersetzen in", "UNIT": "d", "DT": C_DT_UINT16
+        "RT": C_REG_TYPE_INPUT_REGISTERS,
+        "REG": 25,
+        "NAME": "Filter ersetzen in",
+        "UNIT": "d",
+        "DT": C_DT_UINT16,
     },
-
     # DISCRETE_INPUTS
-    C_ERROR_FLAG: {
-        "RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 0, "NAME": "Fehler aktiv?"
-    },
-    C_STANDBY: {
-        "RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 1, "NAME": "Standby"
-    },
-    C_COMFOHOOD: {
-        "RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 2, "NAME": "ComfoHood"
-    },
+    C_ERROR_FLAG: {"RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 0, "NAME": "Fehler aktiv?"},
+    C_STANDBY: {"RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 1, "NAME": "Standby"},
+    C_COMFOHOOD: {"RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 2, "NAME": "ComfoHood"},
     C_FILTER_DIRTY: {
-        "RT": C_REG_TYPE_DISCRETE_INPUTS, "REG": 3, "NAME": "Filter wechseln"
+        "RT": C_REG_TYPE_DISCRETE_INPUTS,
+        "REG": 3,
+        "NAME": "Filter wechseln",
     },
-
     # HOLDING_REGISTERS
     C_VENTILATION_PRESET: {
         "RT": C_REG_TYPE_HOLDING_REGISTERS,
         "REG": 0,
         "NAME": "Lüftungsstufe",
         "DT": C_DT_UINT16,  # byte -> in 16 Bit Register
-        "VALUES": {0: "Außer Haus", 1: "Voreinstellung 1", 2: "Voreinstellung 2", 3: "Voreinstellung 3", "default": 2},
+        "VALUES": {
+            0: "Außer Haus",
+            1: "Voreinstellung 1",
+            2: "Voreinstellung 2",
+            3: "Voreinstellung 3",
+            "default": 2,
+        },
     },
     C_TEMPERATURE_PROFILE: {
         "RT": C_REG_TYPE_HOLDING_REGISTERS,
@@ -458,18 +549,19 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
         "RT": C_REG_TYPE_HOLDING_REGISTERS,
         "REG": 4,
         "NAME": "Boost-Zeit [min.]",
-        "FAKTOR": 0.016666666667, # Sekunden: 1.0, im Register stehen Sekunden, Umrechnung in Minuten
+        "FAKTOR": 0.016666666667,  # Sekunden: 1.0, im Register stehen Sekunden, Umrechnung in Minuten
         "UNIT": "min",
-        "STEP": 1, # Sekunden: 60,
+        "STEP": 1,  # Sekunden: 60,
         "MIN": 0,
-        "MAX": 1092, # Sekunden: 65535,
+        "MAX": 1092,  # Sekunden: 65535,
         "DT": C_DT_UINT16,
         # Hinweis: 65535 (18h12m15s)wird als 24 Stunden betrachtet
     },
-
     # COILS
     C_RESET_ERRORS: {
-        "RT": C_REG_TYPE_COILS, "REG": 0, "NAME": "Fehler quittieren"
+        "RT": C_REG_TYPE_COILS,
+        "REG": 0,
+        "NAME": "Fehler quittieren",
         # selbstrücksetzende Coil, der Wert False wird ignoriert
     },
     # # Wird schon über C_VENTILATION_PRESET gesetzt
@@ -485,42 +577,38 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
     #     "RT": C_REG_TYPE_COILS, "REG": 3, "NAME": "VentilationPreset2"
     #     # der Wert False wird ignoriert
     # },
-    #C_VENTILATIONPRESET3: {
+    # C_VENTILATIONPRESET3: {
     #    "RT": C_REG_TYPE_COILS, "REG": 4, "NAME": "VentilationPreset3"
     #    # der Wert False wird ignoriert
-    #},
-    C_AUTO_MODE: {
-        "RT": C_REG_TYPE_COILS, "REG": 5, "NAME": "Auto Mode"
-    },
-    C_BOOST: {
-        "RT": C_REG_TYPE_COILS, "REG": 6, "NAME": "Boost"
-    },
-    C_AWAY_FUNCTION: {
-        "RT": C_REG_TYPE_COILS, "REG": 7, "NAME": "Away function"
-    },
-    C_COMFOCOOL: {
-        "RT": C_REG_TYPE_COILS, "REG": 8, "NAME": "ComfoCool"
-    },
+    # },
+    C_AUTO_MODE: {"RT": C_REG_TYPE_COILS, "REG": 5, "NAME": "Auto Mode"},
+    C_BOOST: {"RT": C_REG_TYPE_COILS, "REG": 6, "NAME": "Boost"},
+    C_AWAY_FUNCTION: {"RT": C_REG_TYPE_COILS, "REG": 7, "NAME": "Away function"},
+    C_COMFOCOOL: {"RT": C_REG_TYPE_COILS, "REG": 8, "NAME": "ComfoCool"},
 }
-
 
 
 # ------------------------------------------------------------
 # Klassendefinitionen für die unterschiedlichen Entitätstypen
 # ------------------------------------------------------------
 
+
 @dataclass
 class HaComfoConnectPROBinarySensorEntityDescription(BinarySensorEntityDescription):
     """A class that describes HaComfoConnectPRO Modbus binarysensor entities."""
+
 
 @dataclass
 class HaComfoConnectPROSensorEntityDescription(SensorEntityDescription):
     """A class that describes HaComfoConnectPRO Modbus sensor entities."""
 
+
 @dataclass
 class HaComfoConnectPROBinaryEntityDescription(BinarySensorEntityDescription):
     """A class that describes HaComfoConnectPRO Modbus binary entities."""
+
     # Hinweis: Falls echte Schalter-Entities verwendet werden, ggf. SwitchEntityDescription verwenden.
+
 
 @dataclass
 class HaComfoConnectPROSelectEntityDescription(SensorEntityDescription):
@@ -529,6 +617,7 @@ class HaComfoConnectPROSelectEntityDescription(SensorEntityDescription):
     select_options: list[str] = None
     default_select_option: str = None
     setter_function = None
+
 
 @dataclass
 class HaComfoConnectPROClimateEntityDescription(ClimateEntityDescription):
@@ -540,6 +629,7 @@ class HaComfoConnectPROClimateEntityDescription(ClimateEntityDescription):
     hvac_modes: list[str] = None
     temperature_unit: str = "°C"
     supported_features: ClimateEntityFeature = ClimateEntityFeature.TARGET_TEMPERATURE
+
 
 @dataclass
 class HaComfoConnectPRONumberEntityDescription(NumberEntityDescription):
@@ -564,75 +654,102 @@ BINARY_TYPES: dict[str, HaComfoConnectPROBinaryEntityDescription] = {}
 
 TEMP_UNITS = {"°C", "K"}
 
+
 def is_entity_readonly(props: Dict[str, Any]) -> bool:
     """Beschreibbar (RW!=None), Read-Only: Beschreibbar (WR=None)"""
     reg_type = get_entity_type(props)
     return reg_type in [C_REG_TYPE_INPUT_REGISTERS, C_REG_TYPE_DISCRETE_INPUTS]
+
 
 def is_entity_readwrite(props: Dict[str, Any]) -> bool:
     """Beschreibbar, Read-Only: Beschreibbar (WR=None)"""
     reg_type = get_entity_type(props)
     return reg_type in [C_REG_TYPE_HOLDING_REGISTERS, C_REG_TYPE_COILS]
 
+
 def is_entity_switch(props: Dict[str, Any]) -> bool:
     reg_type = get_entity_type(props)
-    return (reg_type in [C_REG_TYPE_DISCRETE_INPUTS, C_REG_TYPE_COILS]) or (get_entity_switch(props) is not None)
+    return (reg_type in [C_REG_TYPE_DISCRETE_INPUTS, C_REG_TYPE_COILS]) or (
+        get_entity_switch(props) is not None
+    )
+
 
 def is_entity_select(props: Dict[str, Any]) -> bool:
     return props.get("VALUES") not in (None, {})
 
+
 def is_entity_climate(props: Dict[str, Any]) -> bool:
-    return get_entity_unit(props) in TEMP_UNITS and get_entity_platform(props) in {None, Platform.CLIMATE}
+    return get_entity_unit(props) in TEMP_UNITS and get_entity_platform(props) in {
+        None,
+        Platform.CLIMATE,
+    }
+
 
 def is_entity_number(props: Dict[str, Any]) -> bool:
-    return (
-        get_entity_platform(props) == Platform.NUMBER or
-        not (is_entity_switch(props) or is_entity_select(props) or is_entity_climate(props))
+    return get_entity_platform(props) == Platform.NUMBER or not (
+        is_entity_switch(props) or is_entity_select(props) or is_entity_climate(props)
     )
-
 
 
 # -------------------------------------------------
 # Hilfsfunktionen zum Lesen der Daten einer Entität
 # -------------------------------------------------
 
+
 def get_entity_type(props: Dict[str, Any]) -> int | None:
     return props.get("RT")
+
 
 def get_entity_name(props: Dict[str, Any], default: str = None) -> str | None:
     return props.get("NAME", default)
 
+
 def get_entity_unit(props: Dict[str, Any], default: str = None) -> str | None:
     return props.get("UNIT", default)
+
 
 def get_entity_platform(props: Dict[str, Any], default: str = None) -> str | None:
     return props.get("PF", default)
 
+
 def get_entity_min(props: Dict[str, Any]) -> float | None:
     return props.get("MIN", 0)
+
 
 def get_entity_max(props: Dict[str, Any]) -> float | None:
     return props.get("MAX", 50.0)
 
+
 def get_entity_step(props: Dict[str, Any]) -> float | None:
     return props.get("STEP", 0.1)
 
-def get_entity_hvac_modes(props: Dict[str, Any], default: str = None) -> list[str] | None:
+
+def get_entity_hvac_modes(
+    props: Dict[str, Any], default: str = None
+) -> list[str] | None:
     return props.get("HVAC_MODES") or default
+
 
 def get_entity_switch(props: Dict[str, Any]) -> dict[str, int] | None:
     return props.get("SWITCH")
 
+
 def get_entity_select(props: Dict[str, Any]) -> dict[Any, Any] | None:
     return props.get("VALUES")
 
-def get_entity_select_values_and_default(props: dict[str, Any]) -> tuple[list[str], str] | None:
+
+def get_entity_select_values_and_default(
+    props: dict[str, Any],
+) -> tuple[list[str], str] | None:
     values = get_entity_select(props)
     default_index = values.get("default")
     select_map = {k: v for k, v in values.items() if k != "default"}
     return list(select_map.values()), select_map.get(default_index)
 
-def get_entity_reg(props: Dict[str, Any]) -> tuple[int | None, ModbusTcpClient.DATATYPE | None]:
+
+def get_entity_reg(
+    props: Dict[str, Any],
+) -> tuple[int | None, ModbusTcpClient.DATATYPE | None]:
     reg_type = get_entity_type(props)
     if reg_type in [C_REG_TYPE_COILS, C_REG_TYPE_DISCRETE_INPUTS]:
         dt = C_DT_BITS
@@ -640,8 +757,10 @@ def get_entity_reg(props: Dict[str, Any]) -> tuple[int | None, ModbusTcpClient.D
         dt = props.get("DT")
     return props.get("REG"), dt
 
+
 def get_entity_props(entity: str) -> dict:
     return ENTITIES_DICT[entity]
+
 
 def get_entity_factor(props: Dict[str, Any]) -> float:
     return props.get("FAKTOR", 1.0)
@@ -653,8 +772,15 @@ def get_entity_factor(props: Dict[str, Any]) -> float:
 
 
 def _classify_register(props: Dict[str, Any]) -> int | None:
-    global C_MIN_INPUT_REGISTER, C_MAX_INPUT_REGISTER, C_MIN_HOLDING_REGISTER, C_MAX_HOLDING_REGISTER, \
-           C_MIN_COILS, C_MAX_COILS, C_MIN_DISCRETE_INPUTS, C_MAX_DISCRETE_INPUTS
+    global \
+        C_MIN_INPUT_REGISTER, \
+        C_MAX_INPUT_REGISTER, \
+        C_MIN_HOLDING_REGISTER, \
+        C_MAX_HOLDING_REGISTER, \
+        C_MIN_COILS, \
+        C_MAX_COILS, \
+        C_MIN_DISCRETE_INPUTS, \
+        C_MAX_DISCRETE_INPUTS
 
     reg_type = get_entity_type(props)
     reg_from, dt = get_entity_reg(props)
@@ -683,29 +809,31 @@ def _classify_register(props: Dict[str, Any]) -> int | None:
     if is_entity_readonly(props):
         if is_entity_switch(props):
             """Nicht beschreibbar, Schalter (SWITCH!=None)."""
-            return HaComfoConnectPROBinarySensorEntityDescription #C_REGISTERCLASS_BINARY_SENSOR
+            return HaComfoConnectPROBinarySensorEntityDescription  # C_REGISTERCLASS_BINARY_SENSOR
         elif is_entity_select(props):
             """Nicht beschreibbar, Auswahl (VALUES enthält mindestens ein Element)."""
-            return HaComfoConnectPROSensorEntityDescription #C_REGISTERCLASS_SELECT_ENTITY
+            return HaComfoConnectPROSensorEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
         else:
             """Nicht beschreibbar, kein Schalter (SWITCH=None)."""
-            return HaComfoConnectPROSensorEntityDescription #C_REGISTERCLASS_SENSOR
+            return HaComfoConnectPROSensorEntityDescription  # C_REGISTERCLASS_SENSOR
     else:
         if is_entity_switch(props):
             """Beschreibbar, Schalter (SWITCH!=None)."""
-            return HaComfoConnectPROBinaryEntityDescription #C_REGISTERCLASS_BINARY_ENTITY
+            return HaComfoConnectPROBinaryEntityDescription  # C_REGISTERCLASS_BINARY_ENTITY
         elif is_entity_select(props):
             """Beschreibbar, Auswahl (VALUES enthält mindestens ein Element)."""
-            return HaComfoConnectPROSelectEntityDescription #C_REGISTERCLASS_SELECT_ENTITY
+            return HaComfoConnectPROSelectEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
         elif is_entity_climate(props):
             """Beschreibbar, Nur Temperatureinheiten (°C oder K) zulassen"""
-            return HaComfoConnectPROClimateEntityDescription #C_REGISTERCLASS_CLIMATE_ENTITY
+            return HaComfoConnectPROClimateEntityDescription  # C_REGISTERCLASS_CLIMATE_ENTITY
         else:
             """Beschreibbar, kein Schalter (SWITCH=None), keine Auswahl (VALUES ist None), Einheit optional, aber nicht °C oder K."""
-            return HaComfoConnectPRONumberEntityDescription #C_REGISTERCLASS_NUMBER_ENTITY
+            return HaComfoConnectPRONumberEntityDescription  # C_REGISTERCLASS_NUMBER_ENTITY
 
 
-def _unit_mapping(unit: Optional[str]) -> tuple[Optional[str], Optional[SensorDeviceClass], Optional[SensorStateClass]]:
+def _unit_mapping(
+    unit: Optional[str],
+) -> tuple[Optional[str], Optional[SensorDeviceClass], Optional[SensorStateClass]]:
     """
     Mappt unsere Einheit (UNIT) auf Home-Assistant native_unit_of_measurement + device_class + state_class.
     Für unbekannte Einheiten bleiben Klassen leer.
@@ -716,22 +844,42 @@ def _unit_mapping(unit: Optional[str]) -> tuple[Optional[str], Optional[SensorDe
     u = unit.strip()
     # Temperatur
     if u == "°C":
-        return UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT
+        return (
+            UnitOfTemperature.CELSIUS,
+            SensorDeviceClass.TEMPERATURE,
+            SensorStateClass.MEASUREMENT,
+        )
     if u == "K":
         # Selten als absolute Temperatur; hier i. d. R. Offsets -> als °C nicht sinnvoll.
-        return UnitOfTemperature.KELVIN, SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT
+        return (
+            UnitOfTemperature.KELVIN,
+            SensorDeviceClass.TEMPERATURE,
+            SensorStateClass.MEASUREMENT,
+        )
 
     # Druck
     if u.lower() in {"bar"}:
-        return UnitOfPressure.BAR, SensorDeviceClass.PRESSURE, SensorStateClass.MEASUREMENT
+        return (
+            UnitOfPressure.BAR,
+            SensorDeviceClass.PRESSURE,
+            SensorStateClass.MEASUREMENT,
+        )
 
     # Energie & Leistung
     if u.lower() in {"kwh", "kW/h".lower()}:  # akzeptiere beide Schreibweisen
-        return UnitOfEnergy.KILO_WATT_HOUR, SensorDeviceClass.ENERGY, SensorStateClass.TOTAL_INCREASING
+        return (
+            UnitOfEnergy.KILO_WATT_HOUR,
+            SensorDeviceClass.ENERGY,
+            SensorStateClass.TOTAL_INCREASING,
+        )
     if u.lower() in {"w"}:
         return UnitOfPower.WATT, SensorDeviceClass.POWER, SensorStateClass.MEASUREMENT
     if u.lower() in {"kw"}:
-        return UnitOfPower.KILO_WATT, SensorDeviceClass.POWER, SensorStateClass.MEASUREMENT
+        return (
+            UnitOfPower.KILO_WATT,
+            SensorDeviceClass.POWER,
+            SensorStateClass.MEASUREMENT,
+        )
 
     # Volumenstrom
     if u.lower() in {"l/min", "l/Min", "l pro min"}:
@@ -758,20 +906,30 @@ def _unit_mapping(unit: Optional[str]) -> tuple[Optional[str], Optional[SensorDe
         return "s", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT
 
     # Restdauer
-    if u.lower() in {"d","days"}:
+    if u.lower() in {"d", "days"}:
         return "d", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT
 
     # Fallback: nutze Roh-Einheit ohne Device-Class
     return u, None, SensorStateClass.MEASUREMENT
 
+
 _initialized = False
 
-def init():
 
-    global _initialized, BINARYSENSOR_TYPES, SENSOR_TYPES, SELECT_TYPES, CLIMATE_TYPES, NUMBER_TYPES, BINARY_TYPES
+def init():
+    global \
+        _initialized, \
+        BINARYSENSOR_TYPES, \
+        SENSOR_TYPES, \
+        SELECT_TYPES, \
+        CLIMATE_TYPES, \
+        NUMBER_TYPES, \
+        BINARY_TYPES
     if _initialized:
         return
-    _LOGGER.info("**************************************** ha_comfoconnectpro initalizing ***************************************")
+    _LOGGER.info(
+        "**************************************** ha_comfoconnectpro initalizing ***************************************"
+    )
 
     thismodule.BINARYSENSOR_TYPES = {}
     thismodule.SENSOR_TYPES = {}
@@ -781,7 +939,6 @@ def init():
     thismodule.BINARY_TYPES = {}
 
     for c_key, props in ENTITIES_DICT.items():
-
         entity_key: str = c_key
         name: str = get_entity_name(props, entity_key)
         registerclass = _classify_register(props)
@@ -806,13 +963,15 @@ def init():
                 )
 
             case thismodule.HaComfoConnectPROClimateEntityDescription:
-                #key = f"{C_PREFIX_CLIMATE}_{entity_key}"
-                min_value=get_entity_min(props)
-                max_value=get_entity_max(props)
-                step=get_entity_step(props)
-                hvac_modes=get_entity_hvac_modes(props)
-                temperature_unit=get_entity_unit(props)
-                _LOGGER.debug(f"Temperatur-Stellwert {entity_key}: {name}, {min_value}-{max_value}{temperature_unit} in {step}-er Schritten")
+                # key = f"{C_PREFIX_CLIMATE}_{entity_key}"
+                min_value = get_entity_min(props)
+                max_value = get_entity_max(props)
+                step = get_entity_step(props)
+                hvac_modes = get_entity_hvac_modes(props)
+                temperature_unit = get_entity_unit(props)
+                _LOGGER.debug(
+                    f"Temperatur-Stellwert {entity_key}: {name}, {min_value}-{max_value}{temperature_unit} in {step}-er Schritten"
+                )
                 CLIMATE_TYPES[entity_key] = registerclass(
                     name=name,
                     key=entity_key,
@@ -821,16 +980,20 @@ def init():
                     step=step,
                     hvac_modes=hvac_modes,
                     temperature_unit=temperature_unit,
-                    supported_features=props.get("FEATURES", ClimateEntityFeature.TARGET_TEMPERATURE),
+                    supported_features=props.get(
+                        "FEATURES", ClimateEntityFeature.TARGET_TEMPERATURE
+                    ),
                 )
 
             case thismodule.HaComfoConnectPRONumberEntityDescription:
-                #key = f"{C_PREFIX_NUMBER}_{entity_key}"
-                min_value=get_entity_min(props)
-                max_value=get_entity_max(props)
-                step=get_entity_step(props)
-                unit_of_measurement=get_entity_unit(props)
-                _LOGGER.debug(f"Numerischer Stellwerte {entity_key}: {name}, {min_value}-{max_value}{unit_of_measurement} in {step}-er Schritten")
+                # key = f"{C_PREFIX_NUMBER}_{entity_key}"
+                min_value = get_entity_min(props)
+                max_value = get_entity_max(props)
+                step = get_entity_step(props)
+                unit_of_measurement = get_entity_unit(props)
+                _LOGGER.debug(
+                    f"Numerischer Stellwerte {entity_key}: {name}, {min_value}-{max_value}{unit_of_measurement} in {step}-er Schritten"
+                )
                 NUMBER_TYPES[entity_key] = registerclass(
                     name=name,
                     key=entity_key,
@@ -839,11 +1002,11 @@ def init():
                     step=step,
                     unit_of_measurement=unit_of_measurement,
                     editable=is_entity_readwrite(props),
-                    mode="box"
+                    mode="box",
                 )
 
             case thismodule.HaComfoConnectPROBinaryEntityDescription:
-                #key = f"{C_PREFIX_SWITCH}_{entity_key}"
+                # key = f"{C_PREFIX_SWITCH}_{entity_key}"
                 _LOGGER.debug(f"Schalter {entity_key}: {name}")
                 BINARY_TYPES[entity_key] = registerclass(
                     name=name,
@@ -851,9 +1014,11 @@ def init():
                 )
 
             case thismodule.HaComfoConnectPROSelectEntityDescription:
-                #key = f"{C_PREFIX_SELECT}_{entity_key}"
+                # key = f"{C_PREFIX_SELECT}_{entity_key}"
                 values, default = get_entity_select_values_and_default(props)
-                _LOGGER.debug(f"Auswahl-Entität {entity_key}: {name}, Werte-Bereich: {values}, Default: {default}")
+                _LOGGER.debug(
+                    f"Auswahl-Entität {entity_key}: {name}, Werte-Bereich: {values}, Default: {default}"
+                )
                 SELECT_TYPES[entity_key] = registerclass(
                     name=name,
                     key=entity_key,
@@ -865,21 +1030,26 @@ def init():
                 _LOGGER.warning(f"Unbekannter Entitätstyp {entity_key}: {props}")
                 print(f"Sensor konnte nicht zugeordnet werden: {entity_key}/{name}")
 
-
-
     _initialized = True
-    _LOGGER.debug(f"Status-Register (r/o) von {C_MIN_INPUT_REGISTER} bis {C_MAX_INPUT_REGISTER}")
-    _LOGGER.debug(f"Discrete Inputs-Register (r/o) von {C_MIN_DISCRETE_INPUTS} bis {C_MAX_DISCRETE_INPUTS}")
+    _LOGGER.debug(
+        f"Status-Register (r/o) von {C_MIN_INPUT_REGISTER} bis {C_MAX_INPUT_REGISTER}"
+    )
+    _LOGGER.debug(
+        f"Discrete Inputs-Register (r/o) von {C_MIN_DISCRETE_INPUTS} bis {C_MAX_DISCRETE_INPUTS}"
+    )
     _LOGGER.debug(f"- {len(SENSOR_TYPES)} Sensoren")
     _LOGGER.debug(f"- {len(BINARYSENSOR_TYPES)} Binär-Sensoren")
-    _LOGGER.debug(f"Holding-Register (r/w) von {C_MIN_HOLDING_REGISTER} bis {C_MAX_HOLDING_REGISTER}")
+    _LOGGER.debug(
+        f"Holding-Register (r/w) von {C_MIN_HOLDING_REGISTER} bis {C_MAX_HOLDING_REGISTER}"
+    )
     _LOGGER.debug(f"Coils (r/w) von {C_MIN_COILS} bis {C_MAX_COILS}")
     _LOGGER.debug(f"- {len(SELECT_TYPES)} Auswahl-Entitäten")
     _LOGGER.debug(f"- {len(BINARY_TYPES)} Schalter")
     _LOGGER.debug(f"- {len(CLIMATE_TYPES)} Temperatur-Stellwerte")
     _LOGGER.debug(f"- {len(NUMBER_TYPES)} Numerische Stellwerte")
-    _LOGGER.info("**************************************** ha_comfoconnectpro initalized ****************************************")
+    _LOGGER.info(
+        "**************************************** ha_comfoconnectpro initalized ****************************************"
+    )
 
 
 init()
-

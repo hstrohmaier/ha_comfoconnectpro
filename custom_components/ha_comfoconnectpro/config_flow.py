@@ -1,4 +1,5 @@
-"""Config flow for ComfoConnectPRO integration."""
+"""Config flow for Zehnder ComfoConnect PRO integration."""
+
 from __future__ import annotations
 
 import ipaddress
@@ -11,12 +12,24 @@ import homeassistant.helpers.config_validation as cv
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT, CONF_SCAN_INTERVAL #, CONF_DEVICE
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_NAME,
+    CONF_PORT,
+    CONF_SCAN_INTERVAL,
+)  # , CONF_DEVICE
 
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import DOMAIN, DEFAULT_NAME, DEFAULT_PORT, DEFAULT_HOSTID, DEFAULT_SCAN_INTERVAL, CONF_HOSTID
+from .const import (
+    DOMAIN,
+    DEFAULT_NAME,
+    DEFAULT_PORT,
+    DEFAULT_HOSTID,
+    DEFAULT_SCAN_INTERVAL,
+    CONF_HOSTID,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,7 +63,7 @@ def ha_comfoconnectpro_modbus_entries(hass: HomeAssistant):
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for ComfoConnectPRO."""
+    """Handle a config flow for Zehnder ComfoConnect PRO."""
 
     VERSION = 1
 
@@ -119,13 +132,18 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_HOST, default=self.config_entry.data.get(CONF_HOST)
                     ): cv.string,
                     vol.Optional(
-                        CONF_PORT, default=self.config_entry.data.get(CONF_PORT, DEFAULT_PORT)
+                        CONF_PORT,
+                        default=self.config_entry.data.get(CONF_PORT, DEFAULT_PORT),
                     ): cv.port,
                     vol.Optional(
-                        CONF_SCAN_INTERVAL, default=self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+                        CONF_SCAN_INTERVAL,
+                        default=self.config_entry.data.get(
+                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                        ),
                     ): cv.port,
                     vol.Optional(
-                        CONF_HOSTID, default=self.config_entry.data.get(CONF_HOSTID, DEFAULT_HOSTID)
+                        CONF_HOSTID,
+                        default=self.config_entry.data.get(CONF_HOSTID, DEFAULT_HOSTID),
                     ): int,
                 }
             ),
