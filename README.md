@@ -1,6 +1,13 @@
 # HaComfoConnectPRO - Component
 ![Zehnder logo](/zehnder.png)
 
+## Build Status
+
+[![hassfest](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml)
+[![HACS](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml)
+[![Release checks](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml)
+
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 ![Version](https://img.shields.io/github/v/release/hstrohmaier/ha_comfoconnectpro?style=plastic)
 ![Downloads](https://img.shields.io/github/downloads/hstrohmaier/ha_comfoconnectpro/total)
