@@ -223,7 +223,6 @@ C_REG_TYPE_INPUT_REGISTERS = 4
 # 2) Entity-Konstanten (C_<NAME> = "<entity_key>")
 #    >> Diese Konstanten dienen als Keys im ENTITIES_DICT.
 # ------------------------------------------------------------
-# --- Konstanten (Entity-IDs) ---
 C_CONNECTION_STATE = "connection_state"
 C_ACTIVEERROR1 = "activeerror1"
 C_ACTIVEERROR2 = "activeerror2"
@@ -283,6 +282,7 @@ C_COMFOCOOL = "comfocool"
 #    *REG: Modbus-Register (Zero-Based)
 #    *RT: Register Typ (derzeit 1..4): Holding-Register, Coils (read-write) oder Input-Register, Discrete-Inputs (read-only)
 #    *DT: Datentyp (derzeit nur BITS, INT16, UINT16), Hinweis: BITS für Coils und Discrete-Inputs (Angabe optional). Schalter immer mit 0 oder 1
+#    RW: Read/Write für Coils und Holding-Register unterbinden mit "RW":0
 #    FAKTOR: Multiplikator für Anzeige im HA (derzeit: 1, 0.1)
 #    UNIT: Einheit der Entität (°C, W, kW, Wh, kWh, bar, ppm, m³/h...)
 #    STEP: Steuert die Darstellung in der Anzeige im HA, Schrittweite der Einstellung (z.B. 5.0, 1.0, 0.5, 0.1)
@@ -656,9 +656,9 @@ TEMP_UNITS = {"°C", "K"}
 
 
 def is_entity_readonly(props: Dict[str, Any]) -> bool:
-    """Beschreibbar (RW!=None), Read-Only: Beschreibbar (WR=None)"""
+    """Input-Register oder Discrete-Inputs oder Read-Only: RW=0)"""
     reg_type = get_entity_type(props)
-    return reg_type in [C_REG_TYPE_INPUT_REGISTERS, C_REG_TYPE_DISCRETE_INPUTS]
+    return reg_type in [C_REG_TYPE_INPUT_REGISTERS, C_REG_TYPE_DISCRETE_INPUTS] or (props.get("RW") == 0)
 
 
 def is_entity_readwrite(props: Dict[str, Any]) -> bool:

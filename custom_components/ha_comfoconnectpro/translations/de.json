@@ -15,7 +15,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Options",
+        "title": "Optionen",
         "data": {
           "host": "Host",
           "port": "Port",
