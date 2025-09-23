@@ -1,4 +1,4 @@
-"""Constants for the HaComfoConnectPRO integration."""
+"""Constants for the integration."""
 
 from __future__ import annotations
 
@@ -35,22 +35,22 @@ from pymodbus.client import ModbusTcpClient
 
 import logging
 
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
-_LOGGER.info("ha_comfoconnectpro loaded")
+_LOGGER.info(f"{thismodule}.const loaded")
 
-
-thismodule = sys.modules[__name__]
 
 
 DOMAIN = "ha_comfoconnectpro"
-DEFAULT_NAME = "ComfoConnect PRO Interface"
+DEFAULT_NAME = "ComfoConnect PRO"
 DEFAULT_SCAN_INTERVAL = 15
 DEFAULT_PORT = 502
 DEFAULT_HOSTID = 1
 CONF_HOSTID = "hostid"
 CONF_HUB = "hacomfoconnectpro_hub"
 ATTR_MANUFACTURER = "Zehnder"
+
 
 
 # ------------------------------------------------------------
@@ -594,25 +594,25 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
 
 
 @dataclass
-class HaComfoConnectPROBinarySensorEntityDescription(BinarySensorEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus binarysensor entities."""
+class MyBinarySensorEntityDescription(BinarySensorEntityDescription):
+    """A class that describes Modbus binarysensor entities."""
 
 
 @dataclass
-class HaComfoConnectPROSensorEntityDescription(SensorEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus sensor entities."""
+class MySensorEntityDescription(SensorEntityDescription):
+    """A class that describes Modbus sensor entities."""
 
 
 @dataclass
-class HaComfoConnectPROBinaryEntityDescription(BinarySensorEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus binary entities."""
+class MyBinaryEntityDescription(BinarySensorEntityDescription):
+    """A class that describes Modbus binary entities."""
 
     # Hinweis: Falls echte Schalter-Entities verwendet werden, ggf. SwitchEntityDescription verwenden.
 
 
 @dataclass
-class HaComfoConnectPROSelectEntityDescription(SensorEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus select sensor entities."""
+class MySelectEntityDescription(SensorEntityDescription):
+    """A class that describes Modbus select sensor entities."""
 
     select_options: list[str] = None
     default_select_option: str = None
@@ -620,8 +620,8 @@ class HaComfoConnectPROSelectEntityDescription(SensorEntityDescription):
 
 
 @dataclass
-class HaComfoConnectPROClimateEntityDescription(ClimateEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus climate sensor entities."""
+class MyClimateEntityDescription(ClimateEntityDescription):
+    """A class that describes Modbus climate sensor entities."""
 
     min_value: float = None
     max_value: float = None
@@ -632,20 +632,20 @@ class HaComfoConnectPROClimateEntityDescription(ClimateEntityDescription):
 
 
 @dataclass
-class HaComfoConnectPRONumberEntityDescription(NumberEntityDescription):
-    """A class that describes HaComfoConnectPRO Modbus number entities."""
+class MyNumberEntityDescription(NumberEntityDescription):
+    """A class that describes Modbus number entities."""
 
     mode: str = "slider"
     initial: float = None
     editable: bool = True
 
 
-BINARYSENSOR_TYPES: dict[str, HaComfoConnectPROBinarySensorEntityDescription] = {}
-SENSOR_TYPES: dict[str, HaComfoConnectPROSensorEntityDescription] = {}
-SELECT_TYPES: dict[str, HaComfoConnectPROSelectEntityDescription] = {}
-CLIMATE_TYPES: dict[str, HaComfoConnectPROClimateEntityDescription] = {}
-NUMBER_TYPES: dict[str, HaComfoConnectPRONumberEntityDescription] = {}
-BINARY_TYPES: dict[str, HaComfoConnectPROBinaryEntityDescription] = {}
+BINARYSENSOR_TYPES: dict[str, MyBinarySensorEntityDescription] = {}
+SENSOR_TYPES: dict[str, MySensorEntityDescription] = {}
+SELECT_TYPES: dict[str, MySelectEntityDescription] = {}
+CLIMATE_TYPES: dict[str, MyClimateEntityDescription] = {}
+NUMBER_TYPES: dict[str, MyNumberEntityDescription] = {}
+BINARY_TYPES: dict[str, MyBinaryEntityDescription] = {}
 
 
 # --------------------------------------------------------------------
@@ -809,26 +809,26 @@ def _classify_register(props: Dict[str, Any]) -> int | None:
     if is_entity_readonly(props):
         if is_entity_switch(props):
             """Nicht beschreibbar, Schalter (SWITCH!=None)."""
-            return HaComfoConnectPROBinarySensorEntityDescription  # C_REGISTERCLASS_BINARY_SENSOR
+            return MyBinarySensorEntityDescription  # C_REGISTERCLASS_BINARY_SENSOR
         elif is_entity_select(props):
             """Nicht beschreibbar, Auswahl (VALUES enthält mindestens ein Element)."""
-            return HaComfoConnectPROSensorEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
+            return MySensorEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
         else:
             """Nicht beschreibbar, kein Schalter (SWITCH=None)."""
-            return HaComfoConnectPROSensorEntityDescription  # C_REGISTERCLASS_SENSOR
+            return MySensorEntityDescription  # C_REGISTERCLASS_SENSOR
     else:
         if is_entity_switch(props):
             """Beschreibbar, Schalter (SWITCH!=None)."""
-            return HaComfoConnectPROBinaryEntityDescription  # C_REGISTERCLASS_BINARY_ENTITY
+            return MyBinaryEntityDescription  # C_REGISTERCLASS_BINARY_ENTITY
         elif is_entity_select(props):
             """Beschreibbar, Auswahl (VALUES enthält mindestens ein Element)."""
-            return HaComfoConnectPROSelectEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
+            return MySelectEntityDescription  # C_REGISTERCLASS_SELECT_ENTITY
         elif is_entity_climate(props):
             """Beschreibbar, Nur Temperatureinheiten (°C oder K) zulassen"""
-            return HaComfoConnectPROClimateEntityDescription  # C_REGISTERCLASS_CLIMATE_ENTITY
+            return MyClimateEntityDescription  # C_REGISTERCLASS_CLIMATE_ENTITY
         else:
             """Beschreibbar, kein Schalter (SWITCH=None), keine Auswahl (VALUES ist None), Einheit optional, aber nicht °C oder K."""
-            return HaComfoConnectPRONumberEntityDescription  # C_REGISTERCLASS_NUMBER_ENTITY
+            return MyNumberEntityDescription  # C_REGISTERCLASS_NUMBER_ENTITY
 
 
 def _unit_mapping(
@@ -928,7 +928,7 @@ def init():
     if _initialized:
         return
     _LOGGER.info(
-        "**************************************** ha_comfoconnectpro initalizing ***************************************"
+        "****************************************  initalizing ***************************************"
     )
 
     thismodule.BINARYSENSOR_TYPES = {}
@@ -944,7 +944,7 @@ def init():
         registerclass = _classify_register(props)
 
         match registerclass:
-            case thismodule.HaComfoConnectPROSensorEntityDescription:
+            case thismodule.MySensorEntityDescription:
                 unit, device_class, state_class = _unit_mapping(get_entity_unit(props))
                 _LOGGER.debug(f"Sensor {entity_key}: {name}, Einheit {unit}")
                 SENSOR_TYPES[entity_key] = registerclass(
@@ -955,14 +955,14 @@ def init():
                     state_class=state_class,
                 )
 
-            case thismodule.HaComfoConnectPROBinarySensorEntityDescription:
+            case thismodule.MyBinarySensorEntityDescription:
                 _LOGGER.debug(f"Binär-Sensor {entity_key}: {name}")
                 BINARYSENSOR_TYPES[entity_key] = registerclass(
                     name=name,
                     key=entity_key,
                 )
 
-            case thismodule.HaComfoConnectPROClimateEntityDescription:
+            case thismodule.MyClimateEntityDescription:
                 # key = f"{C_PREFIX_CLIMATE}_{entity_key}"
                 min_value = get_entity_min(props)
                 max_value = get_entity_max(props)
@@ -985,14 +985,14 @@ def init():
                     ),
                 )
 
-            case thismodule.HaComfoConnectPRONumberEntityDescription:
+            case thismodule.MyNumberEntityDescription:
                 # key = f"{C_PREFIX_NUMBER}_{entity_key}"
                 min_value = get_entity_min(props)
                 max_value = get_entity_max(props)
                 step = get_entity_step(props)
                 unit_of_measurement = get_entity_unit(props)
                 _LOGGER.debug(
-                    f"Numerischer Stellwerte {entity_key}: {name}, {min_value}-{max_value}{unit_of_measurement} in {step}-er Schritten"
+                    f"Numerischer Stellwert {entity_key}: {name}, {min_value}-{max_value}{unit_of_measurement} in {step}-er Schritten"
                 )
                 NUMBER_TYPES[entity_key] = registerclass(
                     name=name,
@@ -1005,7 +1005,7 @@ def init():
                     mode="box",
                 )
 
-            case thismodule.HaComfoConnectPROBinaryEntityDescription:
+            case thismodule.MyBinaryEntityDescription:
                 # key = f"{C_PREFIX_SWITCH}_{entity_key}"
                 _LOGGER.debug(f"Schalter {entity_key}: {name}")
                 BINARY_TYPES[entity_key] = registerclass(
@@ -1013,7 +1013,7 @@ def init():
                     key=entity_key,
                 )
 
-            case thismodule.HaComfoConnectPROSelectEntityDescription:
+            case thismodule.MySelectEntityDescription:
                 # key = f"{C_PREFIX_SELECT}_{entity_key}"
                 values, default = get_entity_select_values_and_default(props)
                 _LOGGER.debug(
@@ -1048,7 +1048,7 @@ def init():
     _LOGGER.debug(f"- {len(CLIMATE_TYPES)} Temperatur-Stellwerte")
     _LOGGER.debug(f"- {len(NUMBER_TYPES)} Numerische Stellwerte")
     _LOGGER.info(
-        "**************************************** ha_comfoconnectpro initalized ****************************************"
+        "****************************************  initalized ****************************************"
     )
 
 

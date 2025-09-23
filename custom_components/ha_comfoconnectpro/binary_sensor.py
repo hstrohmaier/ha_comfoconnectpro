@@ -1,5 +1,3 @@
-# custom_components/ha_comfoconnectpro/binary_sensor.py
-# neu
 from __future__ import annotations
 
 import logging
@@ -9,26 +7,26 @@ from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import callback
 
 from .entity_common import HubBackedEntity, setup_platform_from_types
-from .const import BINARYSENSOR_TYPES, HaComfoConnectPROBinarySensorEntityDescription
+from .const import BINARYSENSOR_TYPES, MyBinarySensorEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Zehnder ComfoConnect PRO binary sensor entities from config entry."""
+    """Set up my binary sensor entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
         async_add_entities=async_add_entities,
         types_dict=BINARYSENSOR_TYPES,
-        entity_cls=ComfoConnectPROBinarySensor,
+        entity_cls=MyBinarySensor,
     )
 
 
-class ComfoConnectPROBinarySensor(HubBackedEntity, BinarySensorEntity):
-    """Zehnder ComfoConnect PRO binary sensor (read-only switch states)."""
+class MyBinarySensor(HubBackedEntity, BinarySensorEntity):
+    """My binary sensor (read-only switch states)."""
 
-    entity_description: HaComfoConnectPROBinarySensorEntityDescription
+    entity_description: MyBinarySensorEntityDescription
     _attr_is_on: Optional[bool] = None
 
     # def __init__ nicht erforderlich, verwendet __init__ aus HubBackedEntity, da keine eigenen Attribute zusätzlich angelegt werden müssen

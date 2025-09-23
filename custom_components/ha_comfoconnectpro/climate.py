@@ -1,5 +1,3 @@
-# custom_components/ha_comfoconnectpro/climate.py
-# neu
 from __future__ import annotations
 
 import logging
@@ -13,26 +11,26 @@ from homeassistant.components.climate import (
 from homeassistant.core import callback
 
 from .entity_common import HubBackedEntity, setup_platform_from_types
-from .const import CLIMATE_TYPES, HaComfoConnectPROClimateEntityDescription
+from .const import CLIMATE_TYPES, MyClimateEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Zehnder ComfoConnect PRO climate entities from config entry."""
+    """Set up climate entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
         async_add_entities=async_add_entities,
         types_dict=CLIMATE_TYPES,
-        entity_cls=ComfoConnectPROClimate,
+        entity_cls=MyClimate,
     )
 
 
-class ComfoConnectPROClimate(HubBackedEntity, ClimateEntity):
-    """Zehnder ComfoConnect PRO Modbus Climate (reiner Sollwert-Steller)."""
+class MyClimate(HubBackedEntity, ClimateEntity):
+    """My Climate (reiner Sollwert-Steller)."""
 
-    entity_description: HaComfoConnectPROClimateEntityDescription
+    entity_description: MyClimateEntityDescription
 
     def __init__(self, platform_name, hub, device_info, description):
         super().__init__(platform_name, hub, device_info, description)

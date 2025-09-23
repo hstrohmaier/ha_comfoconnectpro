@@ -1,5 +1,3 @@
-# custom_components/ha_comfoconnectpro/number.py
-# neu
 from __future__ import annotations
 
 import logging
@@ -8,26 +6,26 @@ from typing import Optional, Any
 from homeassistant.components.number import NumberEntity
 
 from .entity_common import HubBackedEntity, setup_platform_from_types
-from .const import NUMBER_TYPES, HaComfoConnectPRONumberEntityDescription
+from .const import NUMBER_TYPES, MyNumberEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Zehnder ComfoConnect PRO number entities from config entry."""
+    """Set up my number entities from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
         async_add_entities=async_add_entities,
         types_dict=NUMBER_TYPES,
-        entity_cls=ComfoConnectPRONumber,
+        entity_cls=MyNumber,
     )
 
 
-class ComfoConnectPRONumber(HubBackedEntity, NumberEntity):
-    """Zehnder ComfoConnect PRO Modbus number entity (rw)."""
+class MyNumber(HubBackedEntity, NumberEntity):
+    """My number entity (rw)."""
 
-    entity_description: HaComfoConnectPRONumberEntityDescription
+    entity_description: MyNumberEntityDescription
 
     def __init__(self, platform_name, hub, device_info, description):
         super().__init__(platform_name, hub, device_info, description)

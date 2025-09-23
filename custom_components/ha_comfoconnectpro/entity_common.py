@@ -1,5 +1,3 @@
-# custom_components/ha_comfoconnectpro/entity_common.py
-# neu
 from __future__ import annotations
 
 import logging
@@ -11,6 +9,7 @@ from homeassistant.helpers.entity import Entity
 
 from .const import (
     DOMAIN,
+    DEFAULT_NAME,
     ATTR_MANUFACTURER,
 )
 
@@ -21,8 +20,10 @@ T = TypeVar("T", bound=Entity)
 class HubBackedEntity(Entity):
     """Gemeinsame Basis: hält Hub-Referenz, Device-Info, Name/ID, Update-Hook."""
 
+
     # Beschreibungstyp ist je Plattform unterschiedlich (kommt aus const.py)
     entity_description: Any
+    _attr_has_entity_name = True
 
     def __init__(self, platform_name: str, hub, device_info: dict, description: Any):
         self._platform_name = platform_name
@@ -30,11 +31,24 @@ class HubBackedEntity(Entity):
         self._attr_device_info = device_info
         self.entity_description = description
 
+        # entry_id aus identifiers ziehen: {(DOMAIN, entry.entry_id)}
+        entry_id = None
+        identifiers = device_info.get("identifiers") or set()
+        for dom, ident in identifiers:
+            if dom == DOMAIN:
+                entry_id = ident
+                break
+        self._entry_id = entry_id or platform_name  # Fallback
+
+        self._attr_unique_id = f"{self._entry_id}-{description.key}"
+        base = f"{description.key}"
+        self._attr_suggested_object_id = base
+
     async def async_added_to_hass(self) -> None:
-        self._hub.async_add_hacomfoconnectpro_modbus_sensor(self._on_hub_update)
+        self._hub.async_add_my_modbus_sensor(self._on_hub_update)
 
     async def async_will_remove_from_hass(self) -> None:
-        self._hub.async_remove_hacomfoconnectpro_modbus_sensor(self._on_hub_update)
+        self._hub.async_remove_my_modbus_sensor(self._on_hub_update)
 
     @callback
     def _on_hub_update(self) -> None:
@@ -55,13 +69,13 @@ class HubBackedEntity(Entity):
     def _apply_hub_payload(self, payload: Any) -> None:
         pass
 
-    @property
-    def name(self) -> str:
-        return f"{self.entity_description.name}"
+    #@property
+    #def name(self) -> str:
+    #    return f"{self.entity_description.name}"
 
     @property
     def unique_id(self) -> Optional[str]:
-        return f"{self._platform_name}_{self.entity_description.key}"
+        return f"{self._entry_id}_{self.entity_description.key}"
 
 
 async def setup_platform_from_types(
@@ -76,8 +90,8 @@ async def setup_platform_from_types(
     hub = hass.data[DOMAIN][hub_name]["hub"]
 
     device_info = {
-        "identifiers": {(DOMAIN, hub_name)},
-        "name": hub_name,
+        "identifiers": {(DOMAIN, entry.entry_id)},
+        "name": DEFAULT_NAME,
         "manufacturer": ATTR_MANUFACTURER,
     }
 

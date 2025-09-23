@@ -1,4 +1,3 @@
-"""Config flow for Zehnder ComfoConnect PRO integration."""
 from __future__ import annotations
 
 import ipaddress
@@ -54,7 +53,7 @@ def host_valid(host):
 
 
 @callback
-def ha_comfoconnectpro_modbus_entries(hass: HomeAssistant):
+def ha_my_modbus_entries(hass: HomeAssistant):
     """Return the hosts already configured."""
     return set(
         entry.data[CONF_HOST] for entry in hass.config_entries.async_entries(DOMAIN)
@@ -62,7 +61,7 @@ def ha_comfoconnectpro_modbus_entries(hass: HomeAssistant):
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Zehnder ComfoConnect PRO."""
+    """Handle a config flow."""
 
     VERSION = 1
 
@@ -70,7 +69,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     def _host_in_configuration_exists(self, host) -> bool:
         """Return True if host exists in configuration."""
-        if host in ha_comfoconnectpro_modbus_entries(self.hass):
+        if host in ha_my_modbus_entries(self.hass):
             return True
         return False
 
