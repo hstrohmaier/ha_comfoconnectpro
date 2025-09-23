@@ -1,4 +1,4 @@
-"""The HaComfoConnectPRO integration."""
+"""The ComfoConnectPRO integration."""
 
 from __future__ import annotations
 
@@ -55,14 +55,8 @@ PLATFORMS = [
              ]
 
 
-async def async_setup(hass, config):
-    """Set up the HaComfoConnectPRO modbus component."""
-    hass.data[DOMAIN] = {}
-    return True
-
-
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up a HaComfoConnectPRO modbus."""
+    """Set up a ComfoConnectPRO modbus."""
     _LOGGER.info(entry)
     host = entry.data.get(CONF_HOST)
     name = entry.data.get(CONF_NAME)
@@ -84,7 +78,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 
 async def async_unload_entry(hass, entry):
-    """Unload HaComfoConnectPRO mobus entry."""
+    """Unload ComfoConnectPRO modbus entry."""
     unload_ok = all(
         await asyncio.gather(
             *[

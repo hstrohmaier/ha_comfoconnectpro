@@ -1,4 +1,4 @@
-# HaComfoConnectPRO - Component
+# ComfoConnectPRO - Component
 ![Zehnder logo](/zehnder.png)
 
 ## Build Status

@@ -1,4 +1,4 @@
-"""Config flow for HaComfoConnectPRO integration."""
+"""Config flow for ComfoConnectPRO integration."""
 from __future__ import annotations
 
 import ipaddress
@@ -50,7 +50,7 @@ def ha_comfoconnectpro_modbus_entries(hass: HomeAssistant):
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for HaComfoConnectPRO."""
+    """Handle a config flow for ComfoConnectPRO."""
 
     VERSION = 1
 

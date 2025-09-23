@@ -1,7 +1,7 @@
 {
     "domain": "ha_comfoconnectpro",
     "name": "ComfoConnect PRO",
-    "version": "1.0.1v",
+    "version": "1.0.1",
     "documentation": "https://github.com/hstrohmaier/ha_comfoconnectpro/#readme",
     "requirements": [
         "pymodbus"
