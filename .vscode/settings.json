@@ -2,5 +2,15 @@
   "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["tests"],
-  "editor.formatOnSave": true
+
+  "python.formatting.provider": "none",
+  "editor.formatOnSave": true,
+
+  "ruff.enable": true,
+  "ruff.organizeImports": true,
+  "ruff.lintOnSave": true,
+
+  "ruff.path": [
+    "${workspaceFolder}/.venv/Scripts/ruff.exe"
+  ]  
 }

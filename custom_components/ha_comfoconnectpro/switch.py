@@ -22,6 +22,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         entity_cls=ComfoConnectPROSwitch,
     )
 
+
 class ComfoConnectPROSwitch(HubBackedEntity, SwitchEntity):
     """ComfoConnectPRO Modbus switch (r/w)."""
 
@@ -36,7 +37,7 @@ class ComfoConnectPROSwitch(HubBackedEntity, SwitchEntity):
     @staticmethod
     def _to_bool(v: Any) -> bool:
         if isinstance(v, str):
-            return not v.strip().lower() in {"off", "0", "false", "no", "aus"}
+            return v.strip().lower() not in {"off", "0", "false", "no", "aus"}
         try:
             return bool(int(v))
         except Exception:
@@ -49,5 +50,3 @@ class ComfoConnectPROSwitch(HubBackedEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs) -> None:
         self._attr_is_on = False
         await self._hub.setter_function_callback(self, False)
-
-    

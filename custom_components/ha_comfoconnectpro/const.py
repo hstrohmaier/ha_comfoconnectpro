@@ -52,9 +52,6 @@ CONF_HUB = "hacomfoconnectpro_hub"
 ATTR_MANUFACTURER = "ComfoConnectPRO"
 
 
-
-from typing import Any, Dict
-
 # ------------------------------------------------------------
 # 1) Error-Konstanten (C_<NAME> = "<error_num>")
 #    >> Diese Konstanten dienen als Keys im ERROR_DICT.
@@ -276,7 +273,7 @@ C_COMFOCOOL = "comfocool"
 
 
 # --------------------------------------------------------------------------------------------
-# 2) ENTITIES_DICT DICT, neue Register müssen nur hier zugefügt werden. 
+# 2) ENTITIES_DICT DICT, neue Register müssen nur hier zugefügt werden.
 #    Sofern zusätzliche Register keine neue Logik erfordern, ist der restliche Code schon darauf vorbereitet
 # --------------------------------------------------------------------------------------------
 #    ENTITIES_DICT: Dict[str, Dict[str, Any]]
@@ -291,7 +288,7 @@ C_COMFOCOOL = "comfocool"
 #    MIN: Erlaubter Mindestwert der Entität
 #    MAX: Erlaubter Höchstwert der Entität
 #    VALUES: Gültige Auswahlwerte; dict[id,AngezeigterName] mit optionalem Bestandteil: "default":<defaultwert>
-#    INC: 1, wenn Entität stetig steigende Werte liefert. 
+#    INC: 1, wenn Entität stetig steigende Werte liefert.
 #    SWITCH: Werte für "aus" und optional für "ein". Wenn "ein" nicht angegeben ist, sind alle anderen ganzahligen Werte "ein" gültig
 #    PF: Anzeige-Variante in HA übersteuern. "PF":Platform.NUMBER v=> Temperaturwert wird nicht als CLIMATE, sondern als NUMBER behandelt.
 #
@@ -299,7 +296,7 @@ C_COMFOCOOL = "comfocool"
 # --------------------------------------------------------------------------------------------
 
 # Modbus-Register gemäß Zehnder_CSY_ComfoConnect-Pro_INM_DE-de.pdf vom 24.09.2024
-# Achtung: Register sind in der Dokumentation mit 1 beginnend nummeriert und es wird darauf verwiesen, 
+# Achtung: Register sind in der Dokumentation mit 1 beginnend nummeriert und es wird darauf verwiesen,
 # dass in der PDU Register mit Null beginnend adressiert werden (1-16 -> 0-15). Daher ist beim REG-Wert immer den Wert aus der Doku um eins reduzieren.
 # Getestet mit ComfoConnectPRO  RCG 2.0.0.10
 
@@ -319,27 +316,27 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
         "DT": C_DT_UINT16
     },
     C_ACTIVEERROR1: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 1, "NAME": "Fehler 1", 
+        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 1, "NAME": "Fehler 1",
         "VALUES": ERROR_DICT,
         "DT": C_DT_UINT16
     },
     C_ACTIVEERROR2: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 2, "NAME": "Fehler 2", 
+        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 2, "NAME": "Fehler 2",
         "VALUES": ERROR_DICT,
         "DT": C_DT_UINT16
     },
     C_ACTIVEERROR3: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 3, "NAME": "Fehler 3", 
+        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 3, "NAME": "Fehler 3",
         "VALUES": ERROR_DICT,
         "DT": C_DT_UINT16
     },
     C_ACTIVEERROR4: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 4, "NAME": "Fehler 4", 
+        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 4, "NAME": "Fehler 4",
         "VALUES": ERROR_DICT,
         "DT": C_DT_UINT16
     },
     C_ACTIVEERROR5: {
-        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 5, "NAME": "Fehler 5", 
+        "RT": C_REG_TYPE_INPUT_REGISTERS, "REG": 5, "NAME": "Fehler 5",
         "VALUES": ERROR_DICT,
         "DT": C_DT_UINT16
     },
@@ -562,7 +559,7 @@ BINARY_TYPES: dict[str, HaComfoConnectPROBinaryEntityDescription] = {}
 
 
 # --------------------------------------------------------------------
-# Hilfsfunktionen zur Klassifizierung der Eintitäten aus ENTITIES_DICT 
+# Hilfsfunktionen zur Klassifizierung der Eintitäten aus ENTITIES_DICT
 # --------------------------------------------------------------------
 
 TEMP_UNITS = {"°C", "K"}
@@ -592,7 +589,7 @@ def is_entity_number(props: Dict[str, Any]) -> bool:
         get_entity_platform(props) == Platform.NUMBER or
         not (is_entity_switch(props) or is_entity_select(props) or is_entity_climate(props))
     )
-        
+
 
 
 # -------------------------------------------------
@@ -657,7 +654,7 @@ def get_entity_factor(props: Dict[str, Any]) -> float:
 
 def _classify_register(props: Dict[str, Any]) -> int | None:
     global C_MIN_INPUT_REGISTER, C_MAX_INPUT_REGISTER, C_MIN_HOLDING_REGISTER, C_MAX_HOLDING_REGISTER, \
-           C_MIN_COILS, C_MAX_COILS, C_MIN_DISCRETE_INPUTS, C_MAX_DISCRETE_INPUTS 
+           C_MIN_COILS, C_MAX_COILS, C_MIN_DISCRETE_INPUTS, C_MAX_DISCRETE_INPUTS
 
     reg_type = get_entity_type(props)
     reg_from, dt = get_entity_reg(props)
@@ -673,16 +670,16 @@ def _classify_register(props: Dict[str, Any]) -> int | None:
         case thismodule.C_REG_TYPE_DISCRETE_INPUTS:
             C_MIN_DISCRETE_INPUTS = min(reg_from, C_MIN_DISCRETE_INPUTS)
             C_MAX_DISCRETE_INPUTS = max(reg_to, C_MAX_DISCRETE_INPUTS)
-        case thismodule.C_REG_TYPE_COILS: 
+        case thismodule.C_REG_TYPE_COILS:
             C_MIN_COILS = min(reg_from, C_MIN_COILS)
             C_MAX_COILS = max(reg_to, C_MAX_COILS)
-        case thismodule.C_REG_TYPE_INPUT_REGISTERS: 
+        case thismodule.C_REG_TYPE_INPUT_REGISTERS:
             C_MIN_INPUT_REGISTER = min(reg_from, C_MIN_INPUT_REGISTER)
             C_MAX_INPUT_REGISTER = max(reg_to, C_MAX_INPUT_REGISTER)
-        case thismodule.C_REG_TYPE_HOLDING_REGISTERS: 
+        case thismodule.C_REG_TYPE_HOLDING_REGISTERS:
             C_MIN_HOLDING_REGISTER = min(reg_from, C_MIN_HOLDING_REGISTER)
             C_MAX_HOLDING_REGISTER = max(reg_to, C_MAX_HOLDING_REGISTER)
-     
+
     if is_entity_readonly(props):
         if is_entity_switch(props):
             """Nicht beschreibbar, Schalter (SWITCH!=None)."""
@@ -759,7 +756,7 @@ def _unit_mapping(unit: Optional[str]) -> tuple[Optional[str], Optional[SensorDe
         return "min", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT
     if u.lower() in {"s", "sek", "sec"}:
         return "s", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT
-    
+
     # Restdauer
     if u.lower() in {"d","days"}:
         return "d", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT
@@ -773,9 +770,9 @@ def init():
 
     global _initialized, BINARYSENSOR_TYPES, SENSOR_TYPES, SELECT_TYPES, CLIMATE_TYPES, NUMBER_TYPES, BINARY_TYPES
     if _initialized:
-        return    
+        return
     _LOGGER.info("**************************************** ha_comfoconnectpro initalizing ***************************************")
-    
+
     thismodule.BINARYSENSOR_TYPES = {}
     thismodule.SENSOR_TYPES = {}
     thismodule.SELECT_TYPES = {}
@@ -788,7 +785,7 @@ def init():
         entity_key: str = c_key
         name: str = get_entity_name(props, entity_key)
         registerclass = _classify_register(props)
-        
+
         match registerclass:
             case thismodule.HaComfoConnectPROSensorEntityDescription:
                 unit, device_class, state_class = _unit_mapping(get_entity_unit(props))

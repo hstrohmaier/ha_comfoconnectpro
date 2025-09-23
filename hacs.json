@@ -1,8 +1,5 @@
 {
   "name": "ha_comfoconnectpro",
   "render_readme": true, 
-  "zip_release": true,
-  "filename": "ha_comfoconnectpro.zip",
-  "homeassistant": "0.100.0",
-  "hacs": "0.24.0"
+  "homeassistant": "2025.9.0"
 }

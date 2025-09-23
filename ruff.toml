@@ -1,0 +1,4 @@
+line-length = 88
+target-version = "py312"
+select = ["E", "F", "W"]
+ignore = ["E501","F401", "F403", "F405"]   # Zeilenlänge ignorieren
