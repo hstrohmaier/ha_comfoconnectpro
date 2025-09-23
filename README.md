@@ -2,8 +2,8 @@
 <img src="https://github.com/mbuchber/ha_comfoconnectpro/blob/b3bb7d035f186dd6520c8395d5a5111821dac922/comfoconnectpro.png"  width="512">
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
-![Version](https://img.shields.io/github/v/release/mbuchber/ha_comfoconnectpro?style=plastic)
-![Downloads](https://img.shields.io/github/downloads/mbuchber/ha_comfoconnectpro/total)
+![Version](https://img.shields.io/github/v/release/hstrohmaier/ha_comfoconnectpro?style=plastic)
+![Downloads](https://img.shields.io/github/downloads/hstrohmaier/ha_comfoconnectpro/total)
 
 Home Assistant Custom Component for Zehnder ComfoConnectPRO interface. 
 
@@ -24,10 +24,8 @@ Use the URL: https://github.com/hstrohmaier/ha_comfoconnectpro
 Copy all files from custom_components/ha_comfoconnectpro/ to custom_components/ha_comfoconnectpro/ inside your config Home Assistant directory.
 
 ### Prerequisites
-- Ownership of a ComfoConnectPRO interface and ComfoAir Q 350 series ;)
-- Some network connection to the interface (Modbus-TCP to ComfoConnectPRO)
-    - See also here: https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1583089663/ComfoConnectPRO+Open+Source
-    - and here: https://github.com/dstrigl/HtREST    
+- Ownership of a ComfoConnectPRO interface and ComfoAir Q 350 series
+- Network connection to the ComfoConnectPRO interface (Modbus-TCP)
 
 ## Configuration via UI
 When adding the component to the Home Assistant intance, the config dialog will ask for Name, Host/IP-Address and Slave ID of the interface and the port number (usually 502 for Modbus over TCP)
