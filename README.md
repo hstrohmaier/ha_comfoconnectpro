@@ -3,9 +3,9 @@
 
 ## Build Status
 
-[![hassfest](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml)
-[![HACS](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml)
-[![Release checks](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml/badge.svg)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml)
+[![hassfest](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml/badge.svg?branch=main)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hassfest.yaml)
+[![HACS](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml/badge.svg?branch=main)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/hacs.yaml)
+[![Release checks](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml/badge.svg?branch=main)](https://github.com/hstrohmaier/ha_comfoconnectpro/actions/workflows/release.yaml)
 
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
