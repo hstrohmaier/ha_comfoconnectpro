@@ -369,7 +369,7 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
     C_EXTRACT_TEMPERATURE: {
         "RT": C_REG_TYPE_INPUT_REGISTERS,
         "REG": 8,
-        "NAME": "Fortlufttemperatur",
+        "NAME": "Ablufttemperatur",
         "FAKTOR": 0.1,
         "UNIT": "°C",
         "DT": C_DT_INT16,
@@ -377,7 +377,7 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
     C_EXHAUST_TEMPERATURE: {
         "RT": C_REG_TYPE_INPUT_REGISTERS,
         "REG": 9,
-        "NAME": "Ablufttemperatur",
+        "NAME": "Fortlufttemperatur",
         "FAKTOR": 0.1,
         "UNIT": "°C",
         "DT": C_DT_INT16,
@@ -408,14 +408,14 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
     C_EXTRACT_HUMIDITY: {
         "RT": C_REG_TYPE_INPUT_REGISTERS,
         "REG": 13,
-        "NAME": "Fortluftfeuchtigkeit",
+        "NAME": "Abluftfeuchtigkeit",
         "UNIT": "%",
         "DT": C_DT_UINT16,
     },
     C_EXHAUST_HUMIDITY: {
         "RT": C_REG_TYPE_INPUT_REGISTERS,
         "REG": 14,
-        "NAME": "Abluftfeuchtigkeit",
+        "NAME": "Fortluftfeuchtigkeit",
         "UNIT": "%",
         "DT": C_DT_UINT16,
     },

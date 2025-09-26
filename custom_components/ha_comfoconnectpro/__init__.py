@@ -9,10 +9,8 @@ from typing import Any, Dict, Iterable, Tuple, Optional
 
 from pymodbus.client import ModbusTcpClient
 
-# from pymodbus.payload import Endian
 from pymodbus.exceptions import ConnectionException
 
-# from pymodbus.payload import BinaryPayloadDecoder
 import voluptuous as vol
 
 from homeassistant.helpers.entity import Entity
