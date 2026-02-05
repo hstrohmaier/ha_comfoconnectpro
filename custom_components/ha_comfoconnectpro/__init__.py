@@ -283,7 +283,7 @@ class MyModbusHub:
         Unbekannte Indizes -> None.
         """
         values: Dict[Any, Any] = get_entity_select(props) or {}
-        return values.get(raw, f"Ungültiger Wert: {raw}")
+        return values.get(raw, f"Invalid value: {raw}")
 
     # ***************************************** SCHREIBEN **************************************************************
 

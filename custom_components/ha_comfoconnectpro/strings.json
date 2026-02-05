@@ -24,5 +24,502 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "connection_state": {
+        "name": "Connection state"
+      },
+      "activeerror1": {
+        "name": "Error 1"
+      },
+      "activeerror2": {
+        "name": "Error 2"
+      },
+      "activeerror3": {
+        "name": "Error 3"
+      },
+      "activeerror4": {
+        "name": "Error 4"
+      },
+      "activeerror5": {
+        "name": "Error 5"
+      },
+      "airflow": {
+        "name": "Supply fan volume"
+      },
+      "room_temperature": {
+        "name": "Room air temperature"
+      },
+      "extract_temperature": {
+        "name": "Extract air temperature"
+      },
+      "exhaust_temperature": {
+        "name": "Exhaust air temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor air temperature"
+      },
+      "supply_temperature": {
+        "name": "Supply air temperature"
+      },
+      "room_humidity": {
+        "name": "Room air humidity"
+      },
+      "extract_humidity": {
+        "name": "Extract air humidity"
+      },
+      "exhaust_humidity": {
+        "name": "Exhaust air humidity"
+      },
+      "outdoor_humidity": {
+        "name": "Outdoor air humidity"
+      },
+      "supply_humidity": {
+        "name": "Supply air humidity"
+      },
+      "co2_sensor_zone_1": {
+        "name": "CO2 sensor zone 1"
+      },
+      "co2_sensor_zone_2": {
+        "name": "CO2 sensor zone 2"
+      },
+      "co2_sensor_zone_3": {
+        "name": "CO2 sensor zone 3"
+      },
+      "co2_sensor_zone_4": {
+        "name": "CO2 sensor zone 4"
+      },
+      "co2_sensor_zone_5": {
+        "name": "CO2 sensor zone 5"
+      },
+      "co2_sensor_zone_6": {
+        "name": "CO2 sensor zone 6"
+      },
+      "co2_sensor_zone_7": {
+        "name": "CO2 sensor zone 7"
+      },
+      "co2_sensor_zone_8": {
+        "name": "CO2 sensor zone 8"
+      },
+      "filter_days_remaining": {
+        "name": "Filter replacement in"
+      }
+    },
+    "binary_sensor": {
+      "error_flag": {
+        "name": "Error active"
+      },
+      "standby": {
+        "name": "Standby"
+      },
+      "comfohood": {
+        "name": "ComfoHood"
+      },
+      "filter_dirty": {
+        "name": "Replace filter"
+      }
+    },
+    "select": {
+      "ventilation_preset": {
+        "name": "Ventilation preset"
+      },
+      "temperature_profile": {
+        "name": "Temperature profile"
+      },
+      "temperature_profile_mode": {
+        "name": "Temperature profile mode"
+      }
+    },
+    "climate": {
+      "external_setpoint": {
+        "name": "External setpoint"
+      }
+    },
+    "number": {
+      "boost_time": {
+        "name": "Boost time"
+      }
+    },
+    "switch": {
+      "reset_errors": {
+        "name": "Acknowledge errors"
+      },
+      "auto_mode": {
+        "name": "Auto mode"
+      },
+      "boost": {
+        "name": "Boost"
+      },
+      "away_function": {
+        "name": "Away function"
+      },
+      "comfocool": {
+        "name": "ComfoCool"
+      }
+    }
+  },
+  "state": {
+    "sensor": {
+      "connection_state": {
+        "ok": "OK",
+        "not_caq_unit": "Detected unit is not a CAQ",
+        "caq_version_incompatible": "CAQ version incompatible",
+        "no_unit_detected": "No ventilation unit detected"
+      },
+      "activeerror1": {
+        "normal_operation": "Normal operation",
+        "temp_sensors_out_of_range": "Two or more temperature sensors are out of range",
+        "temperature_too_high_for_hru": "Temperature too high for HRU",
+        "temperature_sensor_t11_exceeded_limit_too_often": "Temperature sensor T11 value exceeded the limit too often",
+        "temperature_sensor_t11_exceeded_limit": "Temperature sensor T11 value exceeds the limit",
+        "temperature_sensor_t12_exceeded_limit_too_often": "Temperature sensor T12 value exceeded the limit too often",
+        "temperature_sensor_t12_exceeded_limit": "Temperature sensor T12 value exceeds the limit",
+        "temperature_sensor_t20_exceeded_limit_too_often": "Temperature sensor T20 value exceeded the limit too often",
+        "temperature_sensor_t20_exceeded_limit": "Temperature sensor T20 value exceeds the limit",
+        "temperature_sensor_t21_exceeded_limit_too_often": "Temperature sensor T21 value exceeded the limit too often",
+        "temperature_sensor_t21_exceeded_limit": "Temperature sensor T21 value exceeds the limit",
+        "temperature_sensor_t22_exceeded_limit_too_often": "Temperature sensor T22 value exceeded the limit too often",
+        "temperature_sensor_t22_exceeded_limit": "Temperature sensor T22 value exceeds the limit",
+        "hru_not_initialized": "HRU not initialized",
+        "front_door_open": "Front door is open",
+        "preheater_position_mismatch": "Preheater present, but its position (left/right) does not match HRU orientation",
+        "preheater_insufficient_power": "Preheater does not provide the required power",
+        "preheater_insufficient_power_ratio": "Preheater does not provide the required power in the required ratio",
+        "humidity_sensor_phi11_exceeded_limit_too_often": "Humidity sensor phi11 value exceeded the limit too often",
+        "humidity_sensor_phi12_exceeded_limit_too_often": "Humidity sensor phi12 value exceeded the limit too often",
+        "humidity_sensor_phi20_exceeded_limit_too_often": "Humidity sensor phi20 value exceeded the limit too often",
+        "humidity_sensor_phi21_exceeded_limit_too_often": "Humidity sensor phi21 value exceeded the limit too often",
+        "humidity_sensor_phi22_exceeded_limit_too_often": "Humidity sensor phi22 value exceeded the limit too often",
+        "pressure_sensor_p12_exceeded_limit_too_often": "Pressure sensor P12 value exceeded the limit too often",
+        "pressure_sensor_p22_exceeded_limit_too_often": "Pressure sensor P22 value exceeded the limit too often",
+        "fan_speed_f12_exceeded_limit_too_often": "Fan F12 speed exceeded the limit too often",
+        "fan_speed_f22_exceeded_limit_too_often": "Fan F22 speed exceeded the limit too often",
+        "static_pressure_sensor_p12_exceeded_limit_too_often": "Static pressure sensor P12 exceeded the limit too often",
+        "static_pressure_sensor_p22_exceeded_limit_too_often": "Static pressure sensor P22 exceeded the limit too often",
+        "required_fan_speed_f12_not_reached_too_often": "Required fan speed F12 not reached too often",
+        "required_fan_speed_f22_not_reached_too_often": "Required fan speed F22 not reached too often",
+        "required_mass_flow_f12_not_reached_too_often": "Required mass flow for F12 fan not reached too often",
+        "required_mass_flow_f22_not_reached_too_often": "Required mass flow for F22 fan not reached too often",
+        "required_outdoor_temp_after_preheater_not_reached_too_often": "Required outdoor air temperature after preheater not reached too often",
+        "required_supply_temp_not_reached_too_often": "Required supply air temperature not reached too often",
+        "supply_temp_t22_too_low_too_often": "Supply air temperature (sensor T22) too low too often",
+        "imbalance_out_of_tolerance_too_often": "Imbalance was outside tolerance too often in the previous period",
+        "rf_hardware_missing": "RF communication hardware was present but is no longer detected",
+        "options_card_missing": "Options card was present but is no longer detected",
+        "preheater_missing": "Preheater was present but is no longer detected",
+        "afterheater_missing": "Afterheater was present but is no longer detected",
+        "hood_missing": "Hood was present but is no longer detected",
+        "comfocool_missing": "ComfoCool was present but is no longer detected",
+        "comfofond_missing": "ComfoFond was present but is no longer detected",
+        "filter_replace_now": "Filters must be replaced now",
+        "external_filter_input_high": "External filter input is high",
+        "filter_order_now": "Filters should be ordered now; remaining filter life is limited",
+        "standby_active": "Standby is active",
+        "preheater_comm_unreliable": "Preheater communication is unreliable",
+        "bypass_manual": "Bypass is being used manually",
+        "comfocool_overheated": "ComfoCool is overheated",
+        "comfocool_compressor_error": "ComfoCool compressor error",
+        "comfocool_room_temp_out_of_range": "ComfoCool room temperature out of range",
+        "comfocool_compressor_temp_out_of_range": "ComfoCool compressor temperature out of range",
+        "comfocool_supply_temp_out_of_range": "ComfoCool supply temperature out of range",
+        "hood_temp_too_high": "Hood temperature is too high",
+        "hood_active": "Hood is activated",
+        "status_flag": "Status flag",
+        "preheater_current_too_low": "Current too low for preheater",
+        "configuration_error": "Configuration error",
+        "analysis_in_progress": "Warning: error analysis is running",
+        "comfonet_bus_error": "ComfoNet bus error",
+        "co2_sensor_count_decreased": "Number of CO2 sensors on a controller decreased; one or more sensors are no longer detected",
+        "too_many_co2_sensors": "More than 8 sensors detected in a zone",
+        "co2_sensor_general_error": "General CO2 sensor error"
+      },
+      "activeerror2": {
+        "normal_operation": "Normal operation",
+        "temp_sensors_out_of_range": "Two or more temperature sensors are out of range",
+        "temperature_too_high_for_hru": "Temperature too high for HRU",
+        "temperature_sensor_t11_exceeded_limit_too_often": "Temperature sensor T11 value exceeded the limit too often",
+        "temperature_sensor_t11_exceeded_limit": "Temperature sensor T11 value exceeds the limit",
+        "temperature_sensor_t12_exceeded_limit_too_often": "Temperature sensor T12 value exceeded the limit too often",
+        "temperature_sensor_t12_exceeded_limit": "Temperature sensor T12 value exceeds the limit",
+        "temperature_sensor_t20_exceeded_limit_too_often": "Temperature sensor T20 value exceeded the limit too often",
+        "temperature_sensor_t20_exceeded_limit": "Temperature sensor T20 value exceeds the limit",
+        "temperature_sensor_t21_exceeded_limit_too_often": "Temperature sensor T21 value exceeded the limit too often",
+        "temperature_sensor_t21_exceeded_limit": "Temperature sensor T21 value exceeds the limit",
+        "temperature_sensor_t22_exceeded_limit_too_often": "Temperature sensor T22 value exceeded the limit too often",
+        "temperature_sensor_t22_exceeded_limit": "Temperature sensor T22 value exceeds the limit",
+        "hru_not_initialized": "HRU not initialized",
+        "front_door_open": "Front door is open",
+        "preheater_position_mismatch": "Preheater present, but its position (left/right) does not match HRU orientation",
+        "preheater_insufficient_power": "Preheater does not provide the required power",
+        "preheater_insufficient_power_ratio": "Preheater does not provide the required power in the required ratio",
+        "humidity_sensor_phi11_exceeded_limit_too_often": "Humidity sensor phi11 value exceeded the limit too often",
+        "humidity_sensor_phi12_exceeded_limit_too_often": "Humidity sensor phi12 value exceeded the limit too often",
+        "humidity_sensor_phi20_exceeded_limit_too_often": "Humidity sensor phi20 value exceeded the limit too often",
+        "humidity_sensor_phi21_exceeded_limit_too_often": "Humidity sensor phi21 value exceeded the limit too often",
+        "humidity_sensor_phi22_exceeded_limit_too_often": "Humidity sensor phi22 value exceeded the limit too often",
+        "pressure_sensor_p12_exceeded_limit_too_often": "Pressure sensor P12 value exceeded the limit too often",
+        "pressure_sensor_p22_exceeded_limit_too_often": "Pressure sensor P22 value exceeded the limit too often",
+        "fan_speed_f12_exceeded_limit_too_often": "Fan F12 speed exceeded the limit too often",
+        "fan_speed_f22_exceeded_limit_too_often": "Fan F22 speed exceeded the limit too often",
+        "static_pressure_sensor_p12_exceeded_limit_too_often": "Static pressure sensor P12 exceeded the limit too often",
+        "static_pressure_sensor_p22_exceeded_limit_too_often": "Static pressure sensor P22 exceeded the limit too often",
+        "required_fan_speed_f12_not_reached_too_often": "Required fan speed F12 not reached too often",
+        "required_fan_speed_f22_not_reached_too_often": "Required fan speed F22 not reached too often",
+        "required_mass_flow_f12_not_reached_too_often": "Required mass flow for F12 fan not reached too often",
+        "required_mass_flow_f22_not_reached_too_often": "Required mass flow for F22 fan not reached too often",
+        "required_outdoor_temp_after_preheater_not_reached_too_often": "Required outdoor air temperature after preheater not reached too often",
+        "required_supply_temp_not_reached_too_often": "Required supply air temperature not reached too often",
+        "supply_temp_t22_too_low_too_often": "Supply air temperature (sensor T22) too low too often",
+        "imbalance_out_of_tolerance_too_often": "Imbalance was outside tolerance too often in the previous period",
+        "rf_hardware_missing": "RF communication hardware was present but is no longer detected",
+        "options_card_missing": "Options card was present but is no longer detected",
+        "preheater_missing": "Preheater was present but is no longer detected",
+        "afterheater_missing": "Afterheater was present but is no longer detected",
+        "hood_missing": "Hood was present but is no longer detected",
+        "comfocool_missing": "ComfoCool was present but is no longer detected",
+        "comfofond_missing": "ComfoFond was present but is no longer detected",
+        "filter_replace_now": "Filters must be replaced now",
+        "external_filter_input_high": "External filter input is high",
+        "filter_order_now": "Filters should be ordered now; remaining filter life is limited",
+        "standby_active": "Standby is active",
+        "preheater_comm_unreliable": "Preheater communication is unreliable",
+        "bypass_manual": "Bypass is being used manually",
+        "comfocool_overheated": "ComfoCool is overheated",
+        "comfocool_compressor_error": "ComfoCool compressor error",
+        "comfocool_room_temp_out_of_range": "ComfoCool room temperature out of range",
+        "comfocool_compressor_temp_out_of_range": "ComfoCool compressor temperature out of range",
+        "comfocool_supply_temp_out_of_range": "ComfoCool supply temperature out of range",
+        "hood_temp_too_high": "Hood temperature is too high",
+        "hood_active": "Hood is activated",
+        "status_flag": "Status flag",
+        "preheater_current_too_low": "Current too low for preheater",
+        "configuration_error": "Configuration error",
+        "analysis_in_progress": "Warning: error analysis is running",
+        "comfonet_bus_error": "ComfoNet bus error",
+        "co2_sensor_count_decreased": "Number of CO2 sensors on a controller decreased; one or more sensors are no longer detected",
+        "too_many_co2_sensors": "More than 8 sensors detected in a zone",
+        "co2_sensor_general_error": "General CO2 sensor error"
+      },
+      "activeerror3": {
+        "normal_operation": "Normal operation",
+        "temp_sensors_out_of_range": "Two or more temperature sensors are out of range",
+        "temperature_too_high_for_hru": "Temperature too high for HRU",
+        "temperature_sensor_t11_exceeded_limit_too_often": "Temperature sensor T11 value exceeded the limit too often",
+        "temperature_sensor_t11_exceeded_limit": "Temperature sensor T11 value exceeds the limit",
+        "temperature_sensor_t12_exceeded_limit_too_often": "Temperature sensor T12 value exceeded the limit too often",
+        "temperature_sensor_t12_exceeded_limit": "Temperature sensor T12 value exceeds the limit",
+        "temperature_sensor_t20_exceeded_limit_too_often": "Temperature sensor T20 value exceeded the limit too often",
+        "temperature_sensor_t20_exceeded_limit": "Temperature sensor T20 value exceeds the limit",
+        "temperature_sensor_t21_exceeded_limit_too_often": "Temperature sensor T21 value exceeded the limit too often",
+        "temperature_sensor_t21_exceeded_limit": "Temperature sensor T21 value exceeds the limit",
+        "temperature_sensor_t22_exceeded_limit_too_often": "Temperature sensor T22 value exceeded the limit too often",
+        "temperature_sensor_t22_exceeded_limit": "Temperature sensor T22 value exceeds the limit",
+        "hru_not_initialized": "HRU not initialized",
+        "front_door_open": "Front door is open",
+        "preheater_position_mismatch": "Preheater present, but its position (left/right) does not match HRU orientation",
+        "preheater_insufficient_power": "Preheater does not provide the required power",
+        "preheater_insufficient_power_ratio": "Preheater does not provide the required power in the required ratio",
+        "humidity_sensor_phi11_exceeded_limit_too_often": "Humidity sensor phi11 value exceeded the limit too often",
+        "humidity_sensor_phi12_exceeded_limit_too_often": "Humidity sensor phi12 value exceeded the limit too often",
+        "humidity_sensor_phi20_exceeded_limit_too_often": "Humidity sensor phi20 value exceeded the limit too often",
+        "humidity_sensor_phi21_exceeded_limit_too_often": "Humidity sensor phi21 value exceeded the limit too often",
+        "humidity_sensor_phi22_exceeded_limit_too_often": "Humidity sensor phi22 value exceeded the limit too often",
+        "pressure_sensor_p12_exceeded_limit_too_often": "Pressure sensor P12 value exceeded the limit too often",
+        "pressure_sensor_p22_exceeded_limit_too_often": "Pressure sensor P22 value exceeded the limit too often",
+        "fan_speed_f12_exceeded_limit_too_often": "Fan F12 speed exceeded the limit too often",
+        "fan_speed_f22_exceeded_limit_too_often": "Fan F22 speed exceeded the limit too often",
+        "static_pressure_sensor_p12_exceeded_limit_too_often": "Static pressure sensor P12 exceeded the limit too often",
+        "static_pressure_sensor_p22_exceeded_limit_too_often": "Static pressure sensor P22 exceeded the limit too often",
+        "required_fan_speed_f12_not_reached_too_often": "Required fan speed F12 not reached too often",
+        "required_fan_speed_f22_not_reached_too_often": "Required fan speed F22 not reached too often",
+        "required_mass_flow_f12_not_reached_too_often": "Required mass flow for F12 fan not reached too often",
+        "required_mass_flow_f22_not_reached_too_often": "Required mass flow for F22 fan not reached too often",
+        "required_outdoor_temp_after_preheater_not_reached_too_often": "Required outdoor air temperature after preheater not reached too often",
+        "required_supply_temp_not_reached_too_often": "Required supply air temperature not reached too often",
+        "supply_temp_t22_too_low_too_often": "Supply air temperature (sensor T22) too low too often",
+        "imbalance_out_of_tolerance_too_often": "Imbalance was outside tolerance too often in the previous period",
+        "rf_hardware_missing": "RF communication hardware was present but is no longer detected",
+        "options_card_missing": "Options card was present but is no longer detected",
+        "preheater_missing": "Preheater was present but is no longer detected",
+        "afterheater_missing": "Afterheater was present but is no longer detected",
+        "hood_missing": "Hood was present but is no longer detected",
+        "comfocool_missing": "ComfoCool was present but is no longer detected",
+        "comfofond_missing": "ComfoFond was present but is no longer detected",
+        "filter_replace_now": "Filters must be replaced now",
+        "external_filter_input_high": "External filter input is high",
+        "filter_order_now": "Filters should be ordered now; remaining filter life is limited",
+        "standby_active": "Standby is active",
+        "preheater_comm_unreliable": "Preheater communication is unreliable",
+        "bypass_manual": "Bypass is being used manually",
+        "comfocool_overheated": "ComfoCool is overheated",
+        "comfocool_compressor_error": "ComfoCool compressor error",
+        "comfocool_room_temp_out_of_range": "ComfoCool room temperature out of range",
+        "comfocool_compressor_temp_out_of_range": "ComfoCool compressor temperature out of range",
+        "comfocool_supply_temp_out_of_range": "ComfoCool supply temperature out of range",
+        "hood_temp_too_high": "Hood temperature is too high",
+        "hood_active": "Hood is activated",
+        "status_flag": "Status flag",
+        "preheater_current_too_low": "Current too low for preheater",
+        "configuration_error": "Configuration error",
+        "analysis_in_progress": "Warning: error analysis is running",
+        "comfonet_bus_error": "ComfoNet bus error",
+        "co2_sensor_count_decreased": "Number of CO2 sensors on a controller decreased; one or more sensors are no longer detected",
+        "too_many_co2_sensors": "More than 8 sensors detected in a zone",
+        "co2_sensor_general_error": "General CO2 sensor error"
+      },
+      "activeerror4": {
+        "normal_operation": "Normal operation",
+        "temp_sensors_out_of_range": "Two or more temperature sensors are out of range",
+        "temperature_too_high_for_hru": "Temperature too high for HRU",
+        "temperature_sensor_t11_exceeded_limit_too_often": "Temperature sensor T11 value exceeded the limit too often",
+        "temperature_sensor_t11_exceeded_limit": "Temperature sensor T11 value exceeds the limit",
+        "temperature_sensor_t12_exceeded_limit_too_often": "Temperature sensor T12 value exceeded the limit too often",
+        "temperature_sensor_t12_exceeded_limit": "Temperature sensor T12 value exceeds the limit",
+        "temperature_sensor_t20_exceeded_limit_too_often": "Temperature sensor T20 value exceeded the limit too often",
+        "temperature_sensor_t20_exceeded_limit": "Temperature sensor T20 value exceeds the limit",
+        "temperature_sensor_t21_exceeded_limit_too_often": "Temperature sensor T21 value exceeded the limit too often",
+        "temperature_sensor_t21_exceeded_limit": "Temperature sensor T21 value exceeds the limit",
+        "temperature_sensor_t22_exceeded_limit_too_often": "Temperature sensor T22 value exceeded the limit too often",
+        "temperature_sensor_t22_exceeded_limit": "Temperature sensor T22 value exceeds the limit",
+        "hru_not_initialized": "HRU not initialized",
+        "front_door_open": "Front door is open",
+        "preheater_position_mismatch": "Preheater present, but its position (left/right) does not match HRU orientation",
+        "preheater_insufficient_power": "Preheater does not provide the required power",
+        "preheater_insufficient_power_ratio": "Preheater does not provide the required power in the required ratio",
+        "humidity_sensor_phi11_exceeded_limit_too_often": "Humidity sensor phi11 value exceeded the limit too often",
+        "humidity_sensor_phi12_exceeded_limit_too_often": "Humidity sensor phi12 value exceeded the limit too often",
+        "humidity_sensor_phi20_exceeded_limit_too_often": "Humidity sensor phi20 value exceeded the limit too often",
+        "humidity_sensor_phi21_exceeded_limit_too_often": "Humidity sensor phi21 value exceeded the limit too often",
+        "humidity_sensor_phi22_exceeded_limit_too_often": "Humidity sensor phi22 value exceeded the limit too often",
+        "pressure_sensor_p12_exceeded_limit_too_often": "Pressure sensor P12 value exceeded the limit too often",
+        "pressure_sensor_p22_exceeded_limit_too_often": "Pressure sensor P22 value exceeded the limit too often",
+        "fan_speed_f12_exceeded_limit_too_often": "Fan F12 speed exceeded the limit too often",
+        "fan_speed_f22_exceeded_limit_too_often": "Fan F22 speed exceeded the limit too often",
+        "static_pressure_sensor_p12_exceeded_limit_too_often": "Static pressure sensor P12 exceeded the limit too often",
+        "static_pressure_sensor_p22_exceeded_limit_too_often": "Static pressure sensor P22 exceeded the limit too often",
+        "required_fan_speed_f12_not_reached_too_often": "Required fan speed F12 not reached too often",
+        "required_fan_speed_f22_not_reached_too_often": "Required fan speed F22 not reached too often",
+        "required_mass_flow_f12_not_reached_too_often": "Required mass flow for F12 fan not reached too often",
+        "required_mass_flow_f22_not_reached_too_often": "Required mass flow for F22 fan not reached too often",
+        "required_outdoor_temp_after_preheater_not_reached_too_often": "Required outdoor air temperature after preheater not reached too often",
+        "required_supply_temp_not_reached_too_often": "Required supply air temperature not reached too often",
+        "supply_temp_t22_too_low_too_often": "Supply air temperature (sensor T22) too low too often",
+        "imbalance_out_of_tolerance_too_often": "Imbalance was outside tolerance too often in the previous period",
+        "rf_hardware_missing": "RF communication hardware was present but is no longer detected",
+        "options_card_missing": "Options card was present but is no longer detected",
+        "preheater_missing": "Preheater was present but is no longer detected",
+        "afterheater_missing": "Afterheater was present but is no longer detected",
+        "hood_missing": "Hood was present but is no longer detected",
+        "comfocool_missing": "ComfoCool was present but is no longer detected",
+        "comfofond_missing": "ComfoFond was present but is no longer detected",
+        "filter_replace_now": "Filters must be replaced now",
+        "external_filter_input_high": "External filter input is high",
+        "filter_order_now": "Filters should be ordered now; remaining filter life is limited",
+        "standby_active": "Standby is active",
+        "preheater_comm_unreliable": "Preheater communication is unreliable",
+        "bypass_manual": "Bypass is being used manually",
+        "comfocool_overheated": "ComfoCool is overheated",
+        "comfocool_compressor_error": "ComfoCool compressor error",
+        "comfocool_room_temp_out_of_range": "ComfoCool room temperature out of range",
+        "comfocool_compressor_temp_out_of_range": "ComfoCool compressor temperature out of range",
+        "comfocool_supply_temp_out_of_range": "ComfoCool supply temperature out of range",
+        "hood_temp_too_high": "Hood temperature is too high",
+        "hood_active": "Hood is activated",
+        "status_flag": "Status flag",
+        "preheater_current_too_low": "Current too low for preheater",
+        "configuration_error": "Configuration error",
+        "analysis_in_progress": "Warning: error analysis is running",
+        "comfonet_bus_error": "ComfoNet bus error",
+        "co2_sensor_count_decreased": "Number of CO2 sensors on a controller decreased; one or more sensors are no longer detected",
+        "too_many_co2_sensors": "More than 8 sensors detected in a zone",
+        "co2_sensor_general_error": "General CO2 sensor error"
+      },
+      "activeerror5": {
+        "normal_operation": "Normal operation",
+        "temp_sensors_out_of_range": "Two or more temperature sensors are out of range",
+        "temperature_too_high_for_hru": "Temperature too high for HRU",
+        "temperature_sensor_t11_exceeded_limit_too_often": "Temperature sensor T11 value exceeded the limit too often",
+        "temperature_sensor_t11_exceeded_limit": "Temperature sensor T11 value exceeds the limit",
+        "temperature_sensor_t12_exceeded_limit_too_often": "Temperature sensor T12 value exceeded the limit too often",
+        "temperature_sensor_t12_exceeded_limit": "Temperature sensor T12 value exceeds the limit",
+        "temperature_sensor_t20_exceeded_limit_too_often": "Temperature sensor T20 value exceeded the limit too often",
+        "temperature_sensor_t20_exceeded_limit": "Temperature sensor T20 value exceeds the limit",
+        "temperature_sensor_t21_exceeded_limit_too_often": "Temperature sensor T21 value exceeded the limit too often",
+        "temperature_sensor_t21_exceeded_limit": "Temperature sensor T21 value exceeds the limit",
+        "temperature_sensor_t22_exceeded_limit_too_often": "Temperature sensor T22 value exceeded the limit too often",
+        "temperature_sensor_t22_exceeded_limit": "Temperature sensor T22 value exceeds the limit",
+        "hru_not_initialized": "HRU not initialized",
+        "front_door_open": "Front door is open",
+        "preheater_position_mismatch": "Preheater present, but its position (left/right) does not match HRU orientation",
+        "preheater_insufficient_power": "Preheater does not provide the required power",
+        "preheater_insufficient_power_ratio": "Preheater does not provide the required power in the required ratio",
+        "humidity_sensor_phi11_exceeded_limit_too_often": "Humidity sensor phi11 value exceeded the limit too often",
+        "humidity_sensor_phi12_exceeded_limit_too_often": "Humidity sensor phi12 value exceeded the limit too often",
+        "humidity_sensor_phi20_exceeded_limit_too_often": "Humidity sensor phi20 value exceeded the limit too often",
+        "humidity_sensor_phi21_exceeded_limit_too_often": "Humidity sensor phi21 value exceeded the limit too often",
+        "humidity_sensor_phi22_exceeded_limit_too_often": "Humidity sensor phi22 value exceeded the limit too often",
+        "pressure_sensor_p12_exceeded_limit_too_often": "Pressure sensor P12 value exceeded the limit too often",
+        "pressure_sensor_p22_exceeded_limit_too_often": "Pressure sensor P22 value exceeded the limit too often",
+        "fan_speed_f12_exceeded_limit_too_often": "Fan F12 speed exceeded the limit too often",
+        "fan_speed_f22_exceeded_limit_too_often": "Fan F22 speed exceeded the limit too often",
+        "static_pressure_sensor_p12_exceeded_limit_too_often": "Static pressure sensor P12 exceeded the limit too often",
+        "static_pressure_sensor_p22_exceeded_limit_too_often": "Static pressure sensor P22 exceeded the limit too often",
+        "required_fan_speed_f12_not_reached_too_often": "Required fan speed F12 not reached too often",
+        "required_fan_speed_f22_not_reached_too_often": "Required fan speed F22 not reached too often",
+        "required_mass_flow_f12_not_reached_too_often": "Required mass flow for F12 fan not reached too often",
+        "required_mass_flow_f22_not_reached_too_often": "Required mass flow for F22 fan not reached too often",
+        "required_outdoor_temp_after_preheater_not_reached_too_often": "Required outdoor air temperature after preheater not reached too often",
+        "required_supply_temp_not_reached_too_often": "Required supply air temperature not reached too often",
+        "supply_temp_t22_too_low_too_often": "Supply air temperature (sensor T22) too low too often",
+        "imbalance_out_of_tolerance_too_often": "Imbalance was outside tolerance too often in the previous period",
+        "rf_hardware_missing": "RF communication hardware was present but is no longer detected",
+        "options_card_missing": "Options card was present but is no longer detected",
+        "preheater_missing": "Preheater was present but is no longer detected",
+        "afterheater_missing": "Afterheater was present but is no longer detected",
+        "hood_missing": "Hood was present but is no longer detected",
+        "comfocool_missing": "ComfoCool was present but is no longer detected",
+        "comfofond_missing": "ComfoFond was present but is no longer detected",
+        "filter_replace_now": "Filters must be replaced now",
+        "external_filter_input_high": "External filter input is high",
+        "filter_order_now": "Filters should be ordered now; remaining filter life is limited",
+        "standby_active": "Standby is active",
+        "preheater_comm_unreliable": "Preheater communication is unreliable",
+        "bypass_manual": "Bypass is being used manually",
+        "comfocool_overheated": "ComfoCool is overheated",
+        "comfocool_compressor_error": "ComfoCool compressor error",
+        "comfocool_room_temp_out_of_range": "ComfoCool room temperature out of range",
+        "comfocool_compressor_temp_out_of_range": "ComfoCool compressor temperature out of range",
+        "comfocool_supply_temp_out_of_range": "ComfoCool supply temperature out of range",
+        "hood_temp_too_high": "Hood temperature is too high",
+        "hood_active": "Hood is activated",
+        "status_flag": "Status flag",
+        "preheater_current_too_low": "Current too low for preheater",
+        "configuration_error": "Configuration error",
+        "analysis_in_progress": "Warning: error analysis is running",
+        "comfonet_bus_error": "ComfoNet bus error",
+        "co2_sensor_count_decreased": "Number of CO2 sensors on a controller decreased; one or more sensors are no longer detected",
+        "too_many_co2_sensors": "More than 8 sensors detected in a zone",
+        "co2_sensor_general_error": "General CO2 sensor error"
+      }
+    },
+    "select": {
+      "ventilation_preset": {
+        "away": "Away",
+        "preset_1": "Preset 1",
+        "preset_2": "Preset 2",
+        "preset_3": "Preset 3"
+      },
+      "temperature_profile": {
+        "comfort": "Comfort",
+        "eco": "Eco",
+        "warm": "Warm"
+      },
+      "temperature_profile_mode": {
+        "adaptive": "Adaptive",
+        "fixed": "Fixed",
+        "external_setpoint": "External setpoint"
+      }
+    }
   }
 }
