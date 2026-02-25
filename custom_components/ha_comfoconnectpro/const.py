@@ -5,8 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
-import sys
-
 from homeassistant.components.climate import (
     ClimateEntityDescription,
     ClimateEntityFeature,
@@ -33,12 +31,14 @@ from homeassistant.const import (
 
 from pymodbus.client import ModbusTcpClient
 
+import sys
 import logging
 
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
-_LOGGER.info(f"{thismodule}.const loaded")
+_LOGGER.info(f"{thismodule} geladen.")
+
 
 
 

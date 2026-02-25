@@ -3,7 +3,6 @@ from __future__ import annotations
 import ipaddress
 import re
 
-import logging
 from typing import Any
 
 import homeassistant.helpers.config_validation as cv
@@ -29,7 +28,13 @@ from .const import (
     CONF_HOSTID,
 )
 
+import sys
+import logging
+
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.DEBUG)
+_LOGGER.info(f"{thismodule} geladen.")
 
 DATA_SCHEMA = vol.Schema(
     {
@@ -55,9 +60,12 @@ def host_valid(host):
 @callback
 def ha_my_modbus_entries(hass: HomeAssistant):
     """Return the hosts already configured."""
-    return set(
-        entry.data[CONF_HOST] for entry in hass.config_entries.async_entries(DOMAIN)
-    )
+    hosts = set()
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        host = entry.options.get(CONF_HOST, entry.data.get(CONF_HOST))
+        if host:
+            hosts.add(host)
+    return hosts
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -105,6 +113,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        self._config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -112,34 +122,42 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         """Manage the options."""
 
         if user_input is not None:
-            user_input[CONF_NAME] = self.config_entry.data[CONF_NAME]
-            self.hass.config_entries.async_update_entry(
-                self.config_entry, data=user_input, options=self.config_entry.options
-            )
-            await self.hass.config_entries.async_reload(self.config_entry.entry_id)
-            return self.async_create_entry(title="", data={})
+            user_input.pop(CONF_NAME, None)
+            return self.async_create_entry(title="", data=user_input)
 
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_HOST, default=self.config_entry.data.get(CONF_HOST)
+                        CONF_HOST,
+                        default=self._config_entry.options.get(
+                            CONF_HOST, self._config_entry.data.get(CONF_HOST)
+                        ),
                     ): cv.string,
                     vol.Optional(
                         CONF_PORT,
-                        default=self.config_entry.data.get(CONF_PORT, DEFAULT_PORT),
-                    ): cv.port,
-                    vol.Optional(
-                        CONF_SCAN_INTERVAL,
-                        default=self.config_entry.data.get(
-                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                        default=self._config_entry.options.get(
+                            CONF_PORT,
+                            self._config_entry.data.get(CONF_PORT, DEFAULT_PORT),
                         ),
                     ): cv.port,
                     vol.Optional(
+                        CONF_SCAN_INTERVAL,
+                        default=self._config_entry.options.get(
+                            CONF_SCAN_INTERVAL,
+                            self._config_entry.data.get(
+                                CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                            ),
+                        ),
+                    ): vol.Coerce(int),
+                    vol.Optional(
                         CONF_HOSTID,
-                        default=self.config_entry.data.get(CONF_HOSTID, DEFAULT_HOSTID),
-                    ): int,
+                        default=self._config_entry.options.get(
+                            CONF_HOSTID,
+                            self._config_entry.data.get(CONF_HOSTID, DEFAULT_HOSTID),
+                        ),
+                    ): vol.Coerce(int),
                 }
             ),
         )

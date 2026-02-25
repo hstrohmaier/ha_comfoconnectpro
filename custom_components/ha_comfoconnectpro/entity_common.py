@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Callable
 
 from homeassistant.const import CONF_NAME
@@ -13,7 +12,14 @@ from .const import (
     ATTR_MANUFACTURER,
 )
 
+import sys
+import logging
+
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.DEBUG)
+_LOGGER.info(f"{thismodule} geladen.")
+
 
 T = TypeVar("T", bound=Entity)
 
@@ -86,7 +92,7 @@ async def setup_platform_from_types(
     entity_cls: Type[T],
 ) -> bool:
     """Einheitlicher Setup-Helper für alle Plattformen."""
-    hub_name = entry.data[CONF_NAME]
+    hub_name = entry.options.get(CONF_NAME, entry.data[CONF_NAME])
     hub = hass.data[DOMAIN][hub_name]["hub"]
 
     device_info = {

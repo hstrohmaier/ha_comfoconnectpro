@@ -30,6 +30,8 @@ from homeassistant.helpers.event import async_track_time_interval
 from . import const
 from .const import (
     DEFAULT_NAME,
+    DEFAULT_PORT,
+    DEFAULT_HOSTID,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     CONF_HOSTID,
@@ -84,15 +86,28 @@ PLATFORMS = [
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up a modbus connection."""
     _LOGGER.info(f"Setup Entry: {entry}")
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     hass.data.setdefault(DOMAIN, {})
 
-    host = entry.data.get(CONF_HOST)
+    host = entry.options.get(CONF_HOST, entry.data.get(CONF_HOST))
     name = entry.data.get(CONF_NAME)
-    port = entry.data.get(CONF_PORT)
-    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    port = entry.options.get(CONF_PORT, entry.data.get(CONF_PORT, DEFAULT_PORT))
+    scan_interval = entry.options.get(
+        CONF_SCAN_INTERVAL, entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    )
+    try:
+        scan_interval = int(scan_interval)
+    except (TypeError, ValueError):
+        scan_interval = DEFAULT_SCAN_INTERVAL
+
     if scan_interval < 5:
         scan_interval = DEFAULT_SCAN_INTERVAL
-    hostid = entry.data.get(CONF_HOSTID)
+
+    hostid = entry.options.get(CONF_HOSTID, entry.data.get(CONF_HOSTID, DEFAULT_HOSTID))
+    try:
+        hostid = int(hostid)
+    except (TypeError, ValueError):
+        hostid = DEFAULT_HOSTID
 
     _LOGGER.info("Setup %s.%s", DOMAIN, name)
 
@@ -103,6 +118,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
+
+
+async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass, entry):
@@ -118,7 +137,8 @@ async def async_unload_entry(hass, entry):
     if not unload_ok:
         return False
 
-    hass.data[DOMAIN].pop(entry.data["name"])
+    name = entry.data[CONF_NAME]
+    hass.data[DOMAIN].pop(name, None)
     return True
 
 
