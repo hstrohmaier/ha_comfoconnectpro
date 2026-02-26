@@ -6,3 +6,5 @@
 ## [1.0.5] - 2025-09-24 Prefix vor Entity-ID angefügt
 ## [1.0.6] - 2025-09-26 Abluft- und Fortlufttemperatur vertauscht
 ## [1.0.7] - 2026-02-25 Server-Error 500 in Einstellungen gefixt
+## [1.0.8] - 2026-02-26 Übersetzung DE/EN für Bezeichnungen und Werte ergänzt
+

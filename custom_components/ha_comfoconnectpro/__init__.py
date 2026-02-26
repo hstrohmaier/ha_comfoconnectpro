@@ -71,7 +71,7 @@ import logging
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
-_LOGGER.info(f"{thismodule} geladen.")
+_LOGGER.info(f"{thismodule} loaded.")
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,  # BINARYSENSOR_TYPES (r/o)
@@ -170,7 +170,7 @@ class MyModbusHub:
         """Listen for data updates."""
         # This is the first sensor, set up interval.
         if not self._sensors:
-            self.connect()
+            # DO NOT open connection here anymore: self.connect()
             self._unsub_interval_method = async_track_time_interval(
                 self._hass, self.async_refresh_modbus_data, self._scan_interval
             )
@@ -193,11 +193,20 @@ class MyModbusHub:
         if not self._sensors:
             return
 
-        update_result = self.read_modbus_registers()
+
+        if not self._client.connect():
+            _LOGGER.warning("Modbus connect failed")
+            return
+
+        try:
+            update_result = self.read_modbus_registers()
+        finally:
+            self._client.close()
 
         if update_result:
             for update_callback in self._sensors:
                 update_callback()
+
 
     @property
     def name(self):
@@ -361,8 +370,10 @@ class MyModbusHub:
         else:
             reg_words = self._client.convert_to_registers(value=raw, data_type=dt)
 
-        # 2) Schreiben
-        await self._write_modbus_registers(reg, reg_words, dt)
+        # 2) Schreiben (run blocking modbus in executor)
+        await self._hass.async_add_executor_job(
+        lambda: asyncio.run(self._write_modbus_registers(reg, reg_words, dt))
+        )
 
         # 3) Daten neu lesen
         _LOGGER.info("Schreibvorgang abgeschlossen. Löse Refresh-Zyklus aus.")
@@ -524,6 +535,7 @@ class MyModbusHub:
             else:
                 value = self._decode_numeric(props, raw)
 
+            _LOGGER.debug(f"Value: '{value}'")
             self.data[entity_key] = value
 
         _LOGGER.info("Lesen der Register erfolgreich abgeschlossen.")
@@ -542,14 +554,25 @@ class MyModbusHub:
                   -1 & 0xFFFF → 65535
         """
         _LOGGER.info(f"Schreibzugriff auf Register {base_reg}: {reg_values}")
-        for offset, word in enumerate(reg_values):
-            if dt == ModbusTcpClient.DATATYPE.BITS:
-                self._client.write_coil(
-                    address=base_reg + offset, value=bool(word), device_id=self._hostid
-                )
-            else:
-                self._client.write_register(
-                    address=base_reg + offset,
-                    value=int(word) & 0xFFFF,
-                    device_id=self._hostid,
-                )
+
+
+        if not self._client.connect():
+            _LOGGER.warning("Modbus connect failed")
+            return
+
+        try:
+            for offset, word in enumerate(reg_values):
+                if dt == ModbusTcpClient.DATATYPE.BITS:
+                    self._client.write_coil(
+                        address=base_reg + offset,
+                        value=bool(word),
+                        device_id=self._hostid,
+                    )
+                else:
+                    self._client.write_register(
+                        address=base_reg + offset,
+                        value=int(word) & 0xFFFF,
+                        device_id=self._hostid,
+                    )
+        finally:
+            self._client.close()

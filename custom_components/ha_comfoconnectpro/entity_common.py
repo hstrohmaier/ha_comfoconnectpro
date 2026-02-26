@@ -14,11 +14,12 @@ from .const import (
 
 import sys
 import logging
+from homeassistant.components.sensor import SensorDeviceClass
 
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
-_LOGGER.info(f"{thismodule} geladen.")
+_LOGGER.info(f"{thismodule} loaded.")
 
 
 T = TypeVar("T", bound=Entity)
@@ -58,8 +59,8 @@ class HubBackedEntity(Entity):
 
     @callback
     def _on_hub_update(self) -> None:
-        """Gemeinsamer Update-Pfad: holt Payload und ruft Hook."""
         payload = self._hub.data.get(self.entity_description.key)
+
         try:
             self._apply_hub_payload(payload)
         except Exception as exc:
@@ -69,6 +70,7 @@ class HubBackedEntity(Entity):
                 type(self).__name__,
                 exc,
             )
+
         self.async_write_ha_state()
 
     # Von Subklassen überschreiben, um Hub-Daten in Entity-Attribute zu mappen
