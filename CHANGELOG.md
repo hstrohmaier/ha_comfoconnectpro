@@ -7,4 +7,5 @@
 ## [1.0.6] - 2025-09-26 Abluft- und Fortlufttemperatur vertauscht
 ## [1.0.7] - 2026-02-25 Server-Error 500 in Einstellungen gefixt
 ## [1.0.8] - 2026-02-26 Übersetzung DE/EN für Bezeichnungen und Werte ergänzt
+## [1.0.9] - 2026-03-30 Fehlermeldung konkretisiert um Hinweis auf Modbus-Ausfall nach Umstellung Sommerzeit
 
