@@ -466,16 +466,16 @@
         "name": "Ventilation preset",
         "state": {
           "away": "Away",
-          "preset_1": "Preset 1",
-          "preset_2": "Preset 2",
-          "preset_3": "Preset 3"
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
         }
       },
       "temperature_profile": {
         "name": "Temperature profile",
         "state": {
           "comfort": "Comfort",
-          "eco": "Eco",
+          "cool": "Cool",
           "warm": "Warm"
         }
       },
@@ -489,11 +489,14 @@
       }
     },
     "climate": {
-      "external_setpoint": {
-        "name": "External setpoint"
+      "ventilation_climate": {
+        "name": "Climate"
       }
     },
     "number": {
+      "external_setpoint": {
+        "name": "External setpoint"
+      },
       "boost_time": {
         "name": "Boost time"
       }

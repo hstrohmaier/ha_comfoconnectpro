@@ -52,7 +52,11 @@ class MySensor(HubBackedEntity, SensorEntity):
 
             # fallback: wenn options vorhanden und payload ein Index ist
             opts = getattr(self.entity_description, "options", None)
-            if isinstance(payload, int) and isinstance(opts, (list, tuple)) and 0 <= payload < len(opts):
+            if (
+                isinstance(payload, int)
+                and isinstance(opts, (list, tuple))
+                and 0 <= payload < len(opts)
+            ):
                 self._attr_native_value = opts[payload]
                 return
 

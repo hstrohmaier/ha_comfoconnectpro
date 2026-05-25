@@ -16,6 +16,8 @@ Home Assistant Custom Component for Zehnder Zehnder ComfoConnect PRO interface.
 
 ![Example screenshot of dashboard](/Screenshot.png)
 
+![Climate entity with presets](/docs/Climate%20entity.png)
+
 ## Installation
 
 ### HACS

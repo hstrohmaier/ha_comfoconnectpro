@@ -1,23 +1,39 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional, Any
 
 from homeassistant.components.climate import (
     ClimateEntity,
-    ClimateEntityFeature,
+    HVACAction,
     HVACMode,
 )
+from homeassistant.components.climate.const import (
+    PRESET_AWAY,
+    PRESET_BOOST,
+    PRESET_HOME,
+    PRESET_SLEEP,
+)
+from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import callback
 
+from .const import (
+    C_EXTERNAL_SETPOINT,
+    C_STANDBY,
+    C_SUPPLY_HUMIDITY,
+    C_SUPPLY_TEMPERATURE,
+    C_TEMPERATURE_PROFILE,
+    C_TEMPERATURE_PROFILE_MODE,
+    C_VENTILATION_PRESET,
+    CLIMATE_TYPES,
+    MyClimateEntityDescription,
+)
 from .entity_common import HubBackedEntity, setup_platform_from_types
-from .const import CLIMATE_TYPES, MyClimateEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up climate entities from config entry."""
+    """Set up climate entity from config entry."""
     return await setup_platform_from_types(
         hass=hass,
         entry=entry,
@@ -28,80 +44,78 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class MyClimate(HubBackedEntity, ClimateEntity):
-    """My Climate (reiner Sollwert-Steller)."""
+    """Composite climate entity for the ComfoConnect PRO ventilation unit."""
 
     entity_description: MyClimateEntityDescription
 
+    _PROFILE_TO_ACTION: dict[str, HVACAction] = {
+        "comfort": HVACAction.FAN,
+        "cool": HVACAction.COOLING,
+        "warm": HVACAction.HEATING,
+    }
+
+    # Maps device ventilation preset labels to HA built-in preset names
+    _DEVICE_TO_PRESET: dict[str, str] = {
+        "away": PRESET_AWAY,
+        "low": PRESET_SLEEP,
+        "medium": PRESET_HOME,
+        "high": PRESET_BOOST,
+    }
+    _PRESET_TO_DEVICE: dict[str, str] = {v: k for k, v in _DEVICE_TO_PRESET.items()}
+
     def __init__(self, platform_name, hub, device_info, description):
         super().__init__(platform_name, hub, device_info, description)
-        # Nur AUTO anzeigen, damit kein manueller HVAC-Mode erwartet wird
         self._attr_hvac_modes = [HVACMode.AUTO]
         self._attr_hvac_mode = HVACMode.AUTO
-
-        # Statische Eigenschaften aus der Description
+        self._attr_hvac_action = HVACAction.FAN
         self._attr_temperature_unit = description.temperature_unit
-        self._attr_min_temp = description.min_value
-        self._attr_max_temp = description.max_value
-        self._attr_target_temperature_low = description.min_value
-        self._attr_target_temperature_high = description.max_value
-        self._attr_target_temperature_step = description.step
-        self._attr_supported_features = (
-            description.supported_features or ClimateEntityFeature.TARGET_TEMPERATURE
-        )
+        self._attr_supported_features = description.supported_features
+        self._attr_preset_modes = [PRESET_AWAY, PRESET_SLEEP, PRESET_HOME, PRESET_BOOST]
+        self._attr_preset_mode = PRESET_HOME
+        self._attr_min_temp = 18.0
+        self._attr_max_temp = 29.0
+        self._attr_target_temperature_step = 0.1
 
-    def _apply_hub_payload(self, payload: Any) -> None:
-        """
-        Erwartet ein Dict wie:
-          {"temperature": float,
-           "target_temp_low": float | None,
-           "target_temp_high": float | None}
-        """
-        if not isinstance(payload, dict):
-            return
+    @callback
+    def _on_hub_update(self) -> None:
+        supply_temp = self._hub.data.get(C_SUPPLY_TEMPERATURE)
+        if supply_temp is not None:
+            self._attr_current_temperature = float(supply_temp)
 
-        temp = payload.get("temperature")
-        if temp is not None:
-            self._attr_current_temperature = float(temp)
-            self._attr_target_temperature = float(temp)
+        supply_hum = self._hub.data.get(C_SUPPLY_HUMIDITY)
+        if supply_hum is not None:
+            self._attr_current_humidity = int(supply_hum)
 
-        lo = payload.get("target_temp_low")
-        if lo is not None:
-            self._attr_target_temperature_low = float(lo)
+        if self._hub.data.get(C_STANDBY) == "on":
+            self._attr_hvac_action = HVACAction.IDLE
+        else:
+            profile = self._hub.data.get(C_TEMPERATURE_PROFILE)
+            if profile is not None:
+                self._attr_hvac_action = self._PROFILE_TO_ACTION.get(
+                    profile, HVACAction.FAN
+                )
 
-        hi = payload.get("target_temp_high")
-        if hi is not None:
-            self._attr_target_temperature_high = float(hi)
+        preset = self._hub.data.get(C_VENTILATION_PRESET)
+        if preset is not None:
+            self._attr_preset_mode = self._DEVICE_TO_PRESET.get(preset, PRESET_HOME)
 
-    def set_temperature(self, **kwargs) -> None:
-        """
-        Von HA aufgerufen. Reicht die gewünschten Werte an den Hub weiter.
-        Wir delegieren synchron an den Hub via create_task.
-        """
-        # Attribute lokal vorab setzen (optimiertes UI-Feedback)
-        if "temperature" in kwargs:
-            t = float(kwargs["temperature"])
-            self._attr_current_temperature = t
-            self._attr_target_temperature = t
-        if "target_temp_low" in kwargs:
-            self._attr_target_temperature_low = float(kwargs["target_temp_low"])
-        if "target_temp_high" in kwargs:
-            self._attr_target_temperature_high = float(kwargs["target_temp_high"])
+        setpoint = self._hub.data.get(C_EXTERNAL_SETPOINT)
+        if setpoint is not None:
+            self._attr_target_temperature = float(setpoint)
 
-        # Tatsächliches Schreiben an den Hub
-        self.hass.add_job(self._hub.setter_function_callback(self, kwargs))
+        self.async_write_ha_state()
 
     async def async_set_temperature(self, **kwargs) -> None:
-        """
-        Async-Variante (einige Frontends/Automationen nutzen diese).
-        Spiegelt die Logik von set_temperature.
-        """
-        if "temperature" in kwargs:
-            t = float(kwargs["temperature"])
-            self._attr_current_temperature = t
-            self._attr_target_temperature = t
-        if "target_temp_low" in kwargs:
-            self._attr_target_temperature_low = float(kwargs["target_temp_low"])
-        if "target_temp_high" in kwargs:
-            self._attr_target_temperature_high = float(kwargs["target_temp_high"])
+        """Set target temperature via external setpoint register."""
+        temp = kwargs.get(ATTR_TEMPERATURE)
+        if temp is None:
+            return
+        if self._hub.data.get(C_TEMPERATURE_PROFILE_MODE) == "adaptive":
+            return
+        await self._hub.write_entity_value(C_EXTERNAL_SETPOINT, temp)
 
-        await self._hub.setter_function_callback(self, kwargs)
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        """Set ventilation preset."""
+        self._attr_preset_mode = preset_mode
+        device_value = self._PRESET_TO_DEVICE.get(preset_mode, "medium")
+        await self._hub.write_entity_value(C_VENTILATION_PRESET, device_value)

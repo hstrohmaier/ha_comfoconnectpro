@@ -12,7 +12,12 @@ from homeassistant.components.climate import (
     ClimateEntityFeature,
 )
 from homeassistant.components.select import SelectEntityDescription
-from homeassistant.components.sensor import *
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+)
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
@@ -42,7 +47,6 @@ _LOGGER.setLevel(logging.DEBUG)
 _LOGGER.info(f"{thismodule} loaded")
 
 
-
 DOMAIN = "ha_comfoconnectpro"
 DEFAULT_NAME = "ComfoConnect PRO"
 DEFAULT_SCAN_INTERVAL = 15
@@ -51,7 +55,6 @@ DEFAULT_HOSTID = 1
 CONF_HOSTID = "hostid"
 CONF_HUB = "hacomfoconnectpro_hub"
 ATTR_MANUFACTURER = "Zehnder"
-
 
 
 # ------------------------------------------------------------
@@ -514,9 +517,9 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
         "DT": C_DT_UINT16,  # byte -> in 16 Bit Register
         "VALUES": {
             0: "away",
-            1: "preset_1",
-            2: "preset_2",
-            3: "preset_3",
+            1: "low",
+            2: "medium",
+            3: "high",
             "default": 2,
         },
     },
@@ -525,7 +528,7 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
         "REG": 1,
         "NAME": "Temperaturprofil",
         "DT": C_DT_UINT16,  # byte -> in 16 Bit Register
-        "VALUES": {0: "comfort", 1: "eco", 2: "warm", "default": 0},
+        "VALUES": {0: "comfort", 1: "cool", 2: "warm", "default": 0},
         # Hinweis: funktioniert nur im Modus 0 oder 1
     },
     C_TEMPERATURE_PROFILE_MODE: {
@@ -544,6 +547,7 @@ ENTITIES_DICT: Dict[str, Dict[str, Any]] = {
         "MAX": 35.0,
         "UNIT": "°C",
         "DT": C_DT_UINT16,
+        "PF": Platform.NUMBER,
         # Hinweis: funktioniert nur im Modus 2
     },
     C_BOOST_TIME: {
@@ -658,7 +662,9 @@ TEMP_UNITS = {"°C", "K"}
 def is_entity_readonly(props: Dict[str, Any]) -> bool:
     """Input-Register oder Discrete-Inputs oder Read-Only: RW=0)"""
     reg_type = get_entity_type(props)
-    return reg_type in [C_REG_TYPE_INPUT_REGISTERS, C_REG_TYPE_DISCRETE_INPUTS] or (props.get("RW") == 0)
+    return reg_type in [C_REG_TYPE_INPUT_REGISTERS, C_REG_TYPE_DISCRETE_INPUTS] or (
+        props.get("RW") == 0
+    )
 
 
 def is_entity_readwrite(props: Dict[str, Any]) -> bool:
@@ -934,7 +940,17 @@ def init():
     thismodule.BINARYSENSOR_TYPES = {}
     thismodule.SENSOR_TYPES = {}
     thismodule.SELECT_TYPES = {}
-    thismodule.CLIMATE_TYPES = {}
+    thismodule.CLIMATE_TYPES = {
+        "ventilation_climate": MyClimateEntityDescription(
+            key="ventilation_climate",
+            name="Climate",
+            translation_key="ventilation_climate",
+            supported_features=(
+                ClimateEntityFeature.PRESET_MODE
+                | ClimateEntityFeature.TARGET_TEMPERATURE
+            ),
+        )
+    }
     thismodule.NUMBER_TYPES = {}
     thismodule.BINARY_TYPES = {}
 

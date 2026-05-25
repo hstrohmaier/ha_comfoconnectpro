@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import struct
 from datetime import timedelta
 import threading
 from typing import Any, Dict, Iterable, Tuple, Optional
@@ -193,7 +192,6 @@ class MyModbusHub:
         if not self._sensors:
             return
 
-
         if not self._client.connect():
             _LOGGER.warning("Modbus connect failed")
             return
@@ -206,7 +204,6 @@ class MyModbusHub:
         if update_result:
             for update_callback in self._sensors:
                 update_callback()
-
 
     @property
     def name(self):
@@ -372,7 +369,7 @@ class MyModbusHub:
 
         # 2) Schreiben (run blocking modbus in executor)
         await self._hass.async_add_executor_job(
-        lambda: asyncio.run(self._write_modbus_registers(reg, reg_words, dt))
+            self._write_modbus_registers, reg, reg_words, dt
         )
 
         # 3) Daten neu lesen
@@ -396,7 +393,7 @@ class MyModbusHub:
             out_of_bounds = (idx < 0) or (idx + dtlen > buflen)
             if out_of_bounds:
                 raise ValueError(
-                    "Puffer hat nur {buflen} Elemente und ist damit zu klein zum Lesen von {dtlen} Elementen ab Index {idx}!!"
+                    f"Puffer hat nur {buflen} Elemente und ist damit zu klein zum Lesen von {dtlen} Elementen ab Index {idx}!!"
                 )
             else:
                 if dt == ModbusTcpClient.DATATYPE.BITS:
@@ -409,6 +406,28 @@ class MyModbusHub:
             raise ValueError(
                 "Puffer hat keine Elemente. Fehler in Definition const.ENTITIES_DICT!!"
             )
+
+    def _validate_modbus_response(
+        self, response, reg_type_name: str, attr_name: str
+    ) -> bool:
+        """Validate a modbus response object. Returns False and logs error on failure."""
+        if response is None:
+            _LOGGER.error(
+                f"Fehler beim Lesen der {reg_type_name}: keine Antwort (None)."
+            )
+            return False
+        if not hasattr(response, attr_name):
+            _LOGGER.error(
+                f"Fehler beim Lesen der {reg_type_name}: ungültige Antwortstruktur."
+            )
+            return False
+        if not getattr(response, attr_name):
+            _LOGGER.error(f"Fehler beim Lesen der {reg_type_name}: leere Antwort.")
+            _LOGGER.error(
+                "Nach der Zeitumstellung (Sommer-/Winterzeit) muss das ComfoConnectPRO neu gestartet werden! (Stand V1.0.5)"
+            )
+            return False
+        return True
 
     def read_modbus_registers(self):
         """Read from modbus registers"""
@@ -423,19 +442,10 @@ class MyModbusHub:
                     count=C_MAX_INPUT_REGISTER - C_MIN_INPUT_REGISTER + 1,
                     device_id=self._hostid,
                 )
-                if modbusdata_input is None:
-                    _LOGGER.error("Fehler beim Lesen der Input-Register: keine Antwort (None).")
+                if not self._validate_modbus_response(
+                    modbusdata_input, "Input-Register", "registers"
+                ):
                     return False
-
-                if not hasattr(modbusdata_input, "registers"):
-                    _LOGGER.error("Fehler beim Lesen der Input-Register: ungültige Antwortstruktur.")
-                    return False
-
-                if not modbusdata_input.registers:
-                    _LOGGER.error("Fehler beim Lesen der Input-Register: leere Antwort.")
-                    _LOGGER.error("Nach der Zeitumstellung (Sommer-/Winterzeit) muss das ComfoConnectPRO neu gestartet werden! (Stand V1.0.5)")
-                    return False
-
                 _LOGGER.debug(
                     f"{len(modbusdata_input.registers)} Input-Register: {modbusdata_input.registers}"
                 )
@@ -454,19 +464,10 @@ class MyModbusHub:
                     count=C_MAX_HOLDING_REGISTER - C_MIN_HOLDING_REGISTER + 1,
                     device_id=self._hostid,
                 )
-                if modbusdata_holding is None:
-                    _LOGGER.error("Fehler beim Lesen der Holding-Register: keine Antwort (None).")
+                if not self._validate_modbus_response(
+                    modbusdata_holding, "Holding-Register", "registers"
+                ):
                     return False
-
-                if not hasattr(modbusdata_holding, "registers"):
-                    _LOGGER.error("Fehler beim Lesen der Holding-Register: ungültige Antwortstruktur.")
-                    return False
-
-                if not modbusdata_holding.registers:
-                    _LOGGER.error("Fehler beim Lesen der Holding-Register: leere Antwort.")
-                    _LOGGER.error("Nach der Zeitumstellung (Sommer-/Winterzeit) muss das ComfoConnectPRO neu gestartet werden! (Stand V1.0.5)")
-                    return False
-
                 _LOGGER.debug(
                     f"{len(modbusdata_holding.registers)} Holding-Register: {modbusdata_holding.registers}"
                 )
@@ -483,19 +484,10 @@ class MyModbusHub:
                     count=C_MAX_COILS - C_MIN_COILS + 1,
                     device_id=self._hostid,
                 )
-                if modbusdata_coils is None:
-                    _LOGGER.error("Fehler beim Lesen der Coils: keine Antwort (None).")
+                if not self._validate_modbus_response(
+                    modbusdata_coils, "Coils", "bits"
+                ):
                     return False
-
-                if not hasattr(modbusdata_coils, "bits"):
-                    _LOGGER.error("Fehler beim Lesen der Coils: ungültige Antwortstruktur.")
-                    return False
-
-                if not modbusdata_coils.bits:
-                    _LOGGER.error("Fehler beim Lesen der Coils: leere Antwort.")
-                    _LOGGER.error("Nach der Zeitumstellung (Sommer-/Winterzeit) muss das ComfoConnectPRO neu gestartet werden! (Stand V1.0.5)")
-                    return False
-
                 _LOGGER.debug(
                     f"{len(modbusdata_coils.bits)} Coils: {modbusdata_coils.bits}"
                 )
@@ -514,19 +506,10 @@ class MyModbusHub:
                     count=C_MAX_DISCRETE_INPUTS - C_MIN_DISCRETE_INPUTS + 1,
                     device_id=self._hostid,
                 )
-                if modbusdata_discrete is None:
-                    _LOGGER.error("Fehler beim Lesen der Discrete Inputs: keine Antwort (None).")
+                if not self._validate_modbus_response(
+                    modbusdata_discrete, "Discrete Inputs", "bits"
+                ):
                     return False
-
-                if not hasattr(modbusdata_discrete, "bits"):
-                    _LOGGER.error("Fehler beim Lesen der Discrete Inputs: ungültige Antwortstruktur.")
-                    return False
-
-                if not modbusdata_discrete.bits:
-                    _LOGGER.error("Fehler beim Lesen der Discrete Inputs: leere Antwort.")
-                    _LOGGER.error("Nach der Zeitumstellung (Sommer-/Winterzeit) muss das ComfoConnectPRO neu gestartet werden! (Stand V1.0.5)")
-                    return False
-
                 _LOGGER.debug(
                     f"{len(modbusdata_discrete.bits)} Discrete Inputs: {modbusdata_discrete.bits}"
                 )
@@ -577,7 +560,7 @@ class MyModbusHub:
 
     # ***************************************** SCHREIBEN **************************************************************
 
-    async def _write_modbus_registers(
+    def _write_modbus_registers(
         self, base_reg: int, reg_values: Iterable[int], dt: ModbusTcpClient.DATATYPE
     ):
         """
@@ -588,7 +571,6 @@ class MyModbusHub:
                   -1 & 0xFFFF → 65535
         """
         _LOGGER.info(f"Schreibzugriff auf Register {base_reg}: {reg_values}")
-
 
         if not self._client.connect():
             _LOGGER.warning("Modbus connect failed")
