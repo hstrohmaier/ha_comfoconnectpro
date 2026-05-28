@@ -579,16 +579,22 @@ class MyModbusHub:
         try:
             for offset, word in enumerate(reg_values):
                 if dt == ModbusTcpClient.DATATYPE.BITS:
-                    self._client.write_coil(
+                    response = self._client.write_coil(
                         address=base_reg + offset,
                         value=bool(word),
-                        device_id=self._hostid,
+                        slave=self._hostid,
                     )
                 else:
-                    self._client.write_register(
+                    response = self._client.write_register(
                         address=base_reg + offset,
                         value=int(word) & 0xFFFF,
-                        device_id=self._hostid,
+                        slave=self._hostid,
+                    )
+                if hasattr(response, "isError") and response.isError():
+                    _LOGGER.error(
+                        "Fehler beim Schreiben von Register %s: %s",
+                        base_reg + offset,
+                        response,
                     )
         finally:
             self._client.close()
