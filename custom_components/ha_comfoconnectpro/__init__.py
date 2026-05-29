@@ -582,13 +582,13 @@ class MyModbusHub:
                     response = self._client.write_coil(
                         address=base_reg + offset,
                         value=bool(word),
-                        slave=self._hostid,
+                        device_id=self._hostid,
                     )
                 else:
                     response = self._client.write_register(
                         address=base_reg + offset,
                         value=int(word) & 0xFFFF,
-                        slave=self._hostid,
+                        device_id=self._hostid,
                     )
                 if hasattr(response, "isError") and response.isError():
                     _LOGGER.error(
