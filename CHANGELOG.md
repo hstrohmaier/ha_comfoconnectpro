@@ -8,4 +8,8 @@
 ## [1.0.7] - 2026-02-25 Server-Error 500 in Einstellungen gefixt
 ## [1.0.8] - 2026-02-26 Übersetzung DE/EN für Bezeichnungen und Werte ergänzt
 ## [1.0.9] - 2026-03-30 Fehlermeldung konkretisiert um Hinweis auf Modbus-Ausfall nach Umstellung Sommerzeit
+## [1.1.0] - 2026-05-06 Climate Entity hinzugefügt; Temperaturprofil 'eco' in 'cool' umbenannt
+## [1.1.1] - 2026-05-09 Externer Sollwert als Zieltemperatur in Climate Entity ergänzt
+## [1.1.2] - 2026-05-10 Taupunkt- und absolute Feuchtigkeitssensoren hinzugefügt
+## [1.1.3] - 2026-05-29 Schreibfehler in write_coil/write_register behoben (slave-Parameter und Fehlerprüfung)
 
