@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\mikop\\\\dev\\\\homeassistant\\\\ha_comfoconnectpro\" -Filter \"*.py\" -Recurse -File)",
+      "Bash(Select-Object FullName, Length)",
+      "Bash(Sort-Object FullName)",
+      "Bash(python -m py_compile custom_components/ha_comfoconnectpro/__init__.py)",
+      "Bash(python -m py_compile custom_components/ha_comfoconnectpro/config_flow.py)",
+      "Bash(python -m py_compile custom_components/ha_comfoconnectpro/const.py)",
+      "Bash(python -m py_compile custom_components/ha_comfoconnectpro/climate.py)",
+      "mcp__ha-mcp__ha_search_entities",
+      "mcp__ha-mcp__ha_get_state",
+      "Bash(python -m ruff check custom_components/ha_comfoconnectpro/const.py custom_components/ha_comfoconnectpro/sensor.py)",
+      "Bash(ruff check *)"
+    ]
+  }
+}

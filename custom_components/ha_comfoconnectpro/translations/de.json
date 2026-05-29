@@ -445,6 +445,36 @@
       },
       "filter_days_remaining": {
         "name": "Filter ersetzen in"
+      },
+      "room_dew_point": {
+        "name": "Raumluft Taupunkt"
+      },
+      "extract_dew_point": {
+        "name": "Abluft Taupunkt"
+      },
+      "exhaust_dew_point": {
+        "name": "Fortluft Taupunkt"
+      },
+      "outdoor_dew_point": {
+        "name": "Außenluft Taupunkt"
+      },
+      "supply_dew_point": {
+        "name": "Zuluft Taupunkt"
+      },
+      "room_absolute_humidity": {
+        "name": "Raumluft Absolute Feuchte"
+      },
+      "extract_absolute_humidity": {
+        "name": "Abluft Absolute Feuchte"
+      },
+      "exhaust_absolute_humidity": {
+        "name": "Fortluft Absolute Feuchte"
+      },
+      "outdoor_absolute_humidity": {
+        "name": "Außenluft Absolute Feuchte"
+      },
+      "supply_absolute_humidity": {
+        "name": "Zuluft Absolute Feuchte"
       }
     },
     "binary_sensor": {

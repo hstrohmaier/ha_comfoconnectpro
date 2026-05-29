@@ -244,6 +244,19 @@ C_EXTRACT_HUMIDITY = "extract_humidity"
 C_EXHAUST_HUMIDITY = "exhaust_humidity"
 C_OUTDOOR_HUMIDITY = "outdoor_humidity"
 C_SUPPLY_HUMIDITY = "supply_humidity"
+
+C_ROOM_DEW_POINT = "room_dew_point"
+C_EXTRACT_DEW_POINT = "extract_dew_point"
+C_EXHAUST_DEW_POINT = "exhaust_dew_point"
+C_OUTDOOR_DEW_POINT = "outdoor_dew_point"
+C_SUPPLY_DEW_POINT = "supply_dew_point"
+
+C_ROOM_ABSOLUTE_HUMIDITY = "room_absolute_humidity"
+C_EXTRACT_ABSOLUTE_HUMIDITY = "extract_absolute_humidity"
+C_EXHAUST_ABSOLUTE_HUMIDITY = "exhaust_absolute_humidity"
+C_OUTDOOR_ABSOLUTE_HUMIDITY = "outdoor_absolute_humidity"
+C_SUPPLY_ABSOLUTE_HUMIDITY = "supply_absolute_humidity"
+
 C_CO2_SENSOR_ZONE_1 = "co2_sensor_zone_1"
 C_CO2_SENSOR_ZONE_2 = "co2_sensor_zone_2"
 C_CO2_SENSOR_ZONE_3 = "co2_sensor_zone_3"
@@ -609,6 +622,15 @@ class MySensorEntityDescription(SensorEntityDescription):
 
 
 @dataclass
+class DerivedSensorSpec:
+    """Links a synthetic sensor description to its two source hub keys."""
+
+    description: MySensorEntityDescription
+    temp_key: str
+    humidity_key: str
+
+
+@dataclass
 class MyBinaryEntityDescription(BinarySensorEntityDescription):
     """A class that describes Modbus binary entities."""
 
@@ -650,6 +672,52 @@ SELECT_TYPES: dict[str, MySelectEntityDescription] = {}
 CLIMATE_TYPES: dict[str, MyClimateEntityDescription] = {}
 NUMBER_TYPES: dict[str, MyNumberEntityDescription] = {}
 BINARY_TYPES: dict[str, MyBinaryEntityDescription] = {}
+
+_DEW_POINT_PAIRS = [
+    (C_ROOM_DEW_POINT, C_ROOM_TEMPERATURE, C_ROOM_HUMIDITY),
+    (C_EXTRACT_DEW_POINT, C_EXTRACT_TEMPERATURE, C_EXTRACT_HUMIDITY),
+    (C_EXHAUST_DEW_POINT, C_EXHAUST_TEMPERATURE, C_EXHAUST_HUMIDITY),
+    (C_OUTDOOR_DEW_POINT, C_OUTDOOR_TEMPERATURE, C_OUTDOOR_HUMIDITY),
+    (C_SUPPLY_DEW_POINT, C_SUPPLY_TEMPERATURE, C_SUPPLY_HUMIDITY),
+]
+
+DEW_POINT_SENSOR_TYPES: dict[str, DerivedSensorSpec] = {
+    key: DerivedSensorSpec(
+        description=MySensorEntityDescription(
+            key=key,
+            translation_key=key,
+            native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+            device_class=SensorDeviceClass.TEMPERATURE,
+            state_class=SensorStateClass.MEASUREMENT,
+        ),
+        temp_key=temp_key,
+        humidity_key=humidity_key,
+    )
+    for key, temp_key, humidity_key in _DEW_POINT_PAIRS
+}
+
+_ABSOLUTE_HUMIDITY_PAIRS = [
+    (C_ROOM_ABSOLUTE_HUMIDITY, C_ROOM_TEMPERATURE, C_ROOM_HUMIDITY),
+    (C_EXTRACT_ABSOLUTE_HUMIDITY, C_EXTRACT_TEMPERATURE, C_EXTRACT_HUMIDITY),
+    (C_EXHAUST_ABSOLUTE_HUMIDITY, C_EXHAUST_TEMPERATURE, C_EXHAUST_HUMIDITY),
+    (C_OUTDOOR_ABSOLUTE_HUMIDITY, C_OUTDOOR_TEMPERATURE, C_OUTDOOR_HUMIDITY),
+    (C_SUPPLY_ABSOLUTE_HUMIDITY, C_SUPPLY_TEMPERATURE, C_SUPPLY_HUMIDITY),
+]
+
+ABSOLUTE_HUMIDITY_SENSOR_TYPES: dict[str, DerivedSensorSpec] = {
+    key: DerivedSensorSpec(
+        description=MySensorEntityDescription(
+            key=key,
+            translation_key=key,
+            native_unit_of_measurement="g/m³",
+            device_class=None,
+            state_class=SensorStateClass.MEASUREMENT,
+        ),
+        temp_key=temp_key,
+        humidity_key=humidity_key,
+    )
+    for key, temp_key, humidity_key in _ABSOLUTE_HUMIDITY_PAIRS
+}
 
 
 # --------------------------------------------------------------------
