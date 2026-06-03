@@ -187,19 +187,23 @@ class MyModbusHub:
             self._unsub_interval_method = None
             self.close()
 
+    def _do_read_cycle(self) -> bool:
+        """Connect, read all registers, close. Runs in executor under self._lock."""
+        with self._lock:
+            if not self._client.connect():
+                _LOGGER.warning("Modbus connect failed")
+                return False
+            try:
+                return self.read_modbus_registers()
+            finally:
+                self._client.close()
+
     async def async_refresh_modbus_data(self, _now: Optional[int] = None) -> None:
         """Time to update."""
         if not self._sensors:
             return
 
-        if not self._client.connect():
-            _LOGGER.warning("Modbus connect failed")
-            return
-
-        try:
-            update_result = self.read_modbus_registers()
-        finally:
-            self._client.close()
+        update_result = await self._hass.async_add_executor_job(self._do_read_cycle)
 
         if update_result:
             for update_callback in self._sensors:
@@ -436,20 +440,19 @@ class MyModbusHub:
             _LOGGER.debug(
                 f"Lese Input-Register {C_MIN_INPUT_REGISTER} bis {C_MAX_INPUT_REGISTER}..."
             )
-            with self._lock:
-                modbusdata_input = self._client.read_input_registers(
-                    address=C_MIN_INPUT_REGISTER,
-                    count=C_MAX_INPUT_REGISTER - C_MIN_INPUT_REGISTER + 1,
-                    device_id=self._hostid,
-                )
-                if not self._validate_modbus_response(
-                    modbusdata_input, "Input-Register", "registers"
-                ):
-                    return False
-                _LOGGER.debug(
-                    f"{len(modbusdata_input.registers)} Input-Register: {modbusdata_input.registers}"
-                )
-                input_regs = modbusdata_input.registers
+            modbusdata_input = self._client.read_input_registers(
+                address=C_MIN_INPUT_REGISTER,
+                count=C_MAX_INPUT_REGISTER - C_MIN_INPUT_REGISTER + 1,
+                device_id=self._hostid,
+            )
+            if not self._validate_modbus_response(
+                modbusdata_input, "Input-Register", "registers"
+            ):
+                return False
+            _LOGGER.debug(
+                f"{len(modbusdata_input.registers)} Input-Register: {modbusdata_input.registers}"
+            )
+            input_regs = modbusdata_input.registers
         else:
             _LOGGER.debug("Keine Input-Register definiert.")
             input_regs = None
@@ -458,40 +461,38 @@ class MyModbusHub:
             _LOGGER.debug(
                 f"Lese Holding-Register {C_MIN_HOLDING_REGISTER} bis {C_MAX_HOLDING_REGISTER}..."
             )
-            with self._lock:
-                modbusdata_holding = self._client.read_holding_registers(
-                    address=C_MIN_HOLDING_REGISTER,
-                    count=C_MAX_HOLDING_REGISTER - C_MIN_HOLDING_REGISTER + 1,
-                    device_id=self._hostid,
-                )
-                if not self._validate_modbus_response(
-                    modbusdata_holding, "Holding-Register", "registers"
-                ):
-                    return False
-                _LOGGER.debug(
-                    f"{len(modbusdata_holding.registers)} Holding-Register: {modbusdata_holding.registers}"
-                )
-                holding_regs = modbusdata_holding.registers
+            modbusdata_holding = self._client.read_holding_registers(
+                address=C_MIN_HOLDING_REGISTER,
+                count=C_MAX_HOLDING_REGISTER - C_MIN_HOLDING_REGISTER + 1,
+                device_id=self._hostid,
+            )
+            if not self._validate_modbus_response(
+                modbusdata_holding, "Holding-Register", "registers"
+            ):
+                return False
+            _LOGGER.debug(
+                f"{len(modbusdata_holding.registers)} Holding-Register: {modbusdata_holding.registers}"
+            )
+            holding_regs = modbusdata_holding.registers
         else:
             _LOGGER.debug("Keine Holding-Register definiert.")
             holding_regs = None
 
         if C_MAX_COILS >= C_MIN_COILS:
             _LOGGER.debug(f"Lese Coils {C_MIN_COILS} bis {C_MAX_COILS}...")
-            with self._lock:
-                modbusdata_coils = self._client.read_coils(
-                    address=C_MIN_COILS,
-                    count=C_MAX_COILS - C_MIN_COILS + 1,
-                    device_id=self._hostid,
-                )
-                if not self._validate_modbus_response(
-                    modbusdata_coils, "Coils", "bits"
-                ):
-                    return False
-                _LOGGER.debug(
-                    f"{len(modbusdata_coils.bits)} Coils: {modbusdata_coils.bits}"
-                )
-                coils = modbusdata_coils.bits
+            modbusdata_coils = self._client.read_coils(
+                address=C_MIN_COILS,
+                count=C_MAX_COILS - C_MIN_COILS + 1,
+                device_id=self._hostid,
+            )
+            if not self._validate_modbus_response(
+                modbusdata_coils, "Coils", "bits"
+            ):
+                return False
+            _LOGGER.debug(
+                f"{len(modbusdata_coils.bits)} Coils: {modbusdata_coils.bits}"
+            )
+            coils = modbusdata_coils.bits
         else:
             _LOGGER.debug("Keine Coils definiert.")
             coils = None
@@ -500,20 +501,19 @@ class MyModbusHub:
             _LOGGER.debug(
                 f"Lese Discrete Inputs {C_MIN_DISCRETE_INPUTS} bis {C_MAX_DISCRETE_INPUTS} ..."
             )
-            with self._lock:
-                modbusdata_discrete = self._client.read_discrete_inputs(
-                    address=C_MIN_DISCRETE_INPUTS,
-                    count=C_MAX_DISCRETE_INPUTS - C_MIN_DISCRETE_INPUTS + 1,
-                    device_id=self._hostid,
-                )
-                if not self._validate_modbus_response(
-                    modbusdata_discrete, "Discrete Inputs", "bits"
-                ):
-                    return False
-                _LOGGER.debug(
-                    f"{len(modbusdata_discrete.bits)} Discrete Inputs: {modbusdata_discrete.bits}"
-                )
-                discrete = modbusdata_discrete.bits
+            modbusdata_discrete = self._client.read_discrete_inputs(
+                address=C_MIN_DISCRETE_INPUTS,
+                count=C_MAX_DISCRETE_INPUTS - C_MIN_DISCRETE_INPUTS + 1,
+                device_id=self._hostid,
+            )
+            if not self._validate_modbus_response(
+                modbusdata_discrete, "Discrete Inputs", "bits"
+            ):
+                return False
+            _LOGGER.debug(
+                f"{len(modbusdata_discrete.bits)} Discrete Inputs: {modbusdata_discrete.bits}"
+            )
+            discrete = modbusdata_discrete.bits
         else:
             _LOGGER.debug("Keine Discrete Inputs definiert.")
             discrete = None
@@ -572,29 +572,30 @@ class MyModbusHub:
         """
         _LOGGER.info(f"Schreibzugriff auf Register {base_reg}: {reg_values}")
 
-        if not self._client.connect():
-            _LOGGER.warning("Modbus connect failed")
-            return
+        with self._lock:
+            if not self._client.connect():
+                _LOGGER.warning("Modbus connect failed")
+                return
 
-        try:
-            for offset, word in enumerate(reg_values):
-                if dt == ModbusTcpClient.DATATYPE.BITS:
-                    response = self._client.write_coil(
-                        address=base_reg + offset,
-                        value=bool(word),
-                        device_id=self._hostid,
-                    )
-                else:
-                    response = self._client.write_register(
-                        address=base_reg + offset,
-                        value=int(word) & 0xFFFF,
-                        device_id=self._hostid,
-                    )
-                if hasattr(response, "isError") and response.isError():
-                    _LOGGER.error(
-                        "Fehler beim Schreiben von Register %s: %s",
-                        base_reg + offset,
-                        response,
-                    )
-        finally:
-            self._client.close()
+            try:
+                for offset, word in enumerate(reg_values):
+                    if dt == ModbusTcpClient.DATATYPE.BITS:
+                        response = self._client.write_coil(
+                            address=base_reg + offset,
+                            value=bool(word),
+                            device_id=self._hostid,
+                        )
+                    else:
+                        response = self._client.write_register(
+                            address=base_reg + offset,
+                            value=int(word) & 0xFFFF,
+                            device_id=self._hostid,
+                        )
+                    if hasattr(response, "isError") and response.isError():
+                        _LOGGER.error(
+                            "Fehler beim Schreiben von Register %s: %s",
+                            base_reg + offset,
+                            response,
+                        )
+            finally:
+                self._client.close()
