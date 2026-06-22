@@ -11,5 +11,9 @@
 ## [1.1.0] - 2026-05-25 Umstellung auf Climate-Entität
 ## [1.1.1] - 2026-06-22 Loglevel auf INFO gesetzt
 ## [1.1.2] - 2026-06-22 Loglevel wird nicht mehr explizit gesetzt
-## [1.1.2] - 2026-06-22 Tau- und absolute Feuchtigkeitssensoren hinzugefügt
+## [1.1.3] - 2026-06-22 Tau- und absolute Feuchtigkeitssensoren hinzugefügt
+## [1.1.4] - 2026-05-06 Climate Entity hinzugefügt; Temperaturprofil 'eco' in 'cool' umbenannt
+## [1.1.5] - 2026-05-09 Externer Sollwert als Zieltemperatur in Climate Entity ergänzt
+## [1.1.6] - 2026-05-10 Taupunkt- und absolute Feuchtigkeitssensoren hinzugefügt
+## [1.1.7] - 2026-05-29 Schreibfehler in write_coil/write_register behoben (slave-Parameter und Fehlerprüfung)
 
