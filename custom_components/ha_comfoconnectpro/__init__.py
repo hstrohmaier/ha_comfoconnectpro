@@ -69,8 +69,7 @@ import logging
 
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.INFO)
-_LOGGER.info(f"{thismodule} loaded.")
+_LOGGER.info(f"{thismodule} loaded")
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,  # BINARYSENSOR_TYPES (r/o)

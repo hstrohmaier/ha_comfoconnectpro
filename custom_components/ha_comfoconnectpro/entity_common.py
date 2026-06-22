@@ -18,8 +18,7 @@ from homeassistant.components.sensor import SensorDeviceClass
 
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.INFO)
-_LOGGER.info(f"{thismodule} loaded.")
+_LOGGER.info(f"{thismodule} loaded")
 
 
 T = TypeVar("T", bound=Entity)
