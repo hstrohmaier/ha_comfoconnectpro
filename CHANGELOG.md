@@ -10,4 +10,5 @@
 ## [1.0.9] - 2026-03-30 Fehlermeldung konkretisiert um Hinweis auf Modbus-Ausfall nach Umstellung Sommerzeit
 ## [1.1.0] - 2026-05-25 Umstellung auf Climate-Entität
 ## [1.1.1] - 2026-06-22 Loglevel auf INFO gesetzt
+## [1.1.2] - 2026-06-22 Loglevel wird nicht mehr explizit gesetzt
 
