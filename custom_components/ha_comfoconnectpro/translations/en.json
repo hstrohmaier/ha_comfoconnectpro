@@ -445,6 +445,36 @@
       },
       "filter_days_remaining": {
         "name": "Filter replacement in"
+      },
+      "room_dew_point": {
+        "name": "Room air dew point"
+      },
+      "extract_dew_point": {
+        "name": "Extract air dew point"
+      },
+      "exhaust_dew_point": {
+        "name": "Exhaust air dew point"
+      },
+      "outdoor_dew_point": {
+        "name": "Outdoor air dew point"
+      },
+      "supply_dew_point": {
+        "name": "Supply air dew point"
+      },
+      "room_absolute_humidity": {
+        "name": "Room air absolute humidity"
+      },
+      "extract_absolute_humidity": {
+        "name": "Extract air absolute humidity"
+      },
+      "exhaust_absolute_humidity": {
+        "name": "Exhaust air absolute humidity"
+      },
+      "outdoor_absolute_humidity": {
+        "name": "Outdoor air absolute humidity"
+      },
+      "supply_absolute_humidity": {
+        "name": "Supply air absolute humidity"
       }
     },
     "binary_sensor": {
