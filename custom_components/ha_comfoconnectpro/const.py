@@ -43,6 +43,7 @@ import logging
 
 thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info(f"{thismodule} loaded")
 
 
 DOMAIN = "ha_comfoconnectpro"

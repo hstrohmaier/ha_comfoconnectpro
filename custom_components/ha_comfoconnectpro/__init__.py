@@ -67,7 +67,9 @@ from .const import (
 import sys
 import logging
 
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info(f"{thismodule} loaded")
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,  # BINARYSENSOR_TYPES (r/o)
