@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import logging
 import math
 from typing import Any
@@ -16,7 +17,9 @@ from .const import (
     ABSOLUTE_HUMIDITY_SENSOR_TYPES,
 )
 
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info(f"{thismodule} loaded")
 
 
 async def async_setup_entry(hass, entry, async_add_entities):

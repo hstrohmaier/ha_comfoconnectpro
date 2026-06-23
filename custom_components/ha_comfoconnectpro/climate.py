@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import logging
 
 from homeassistant.components.climate import (
@@ -29,7 +30,9 @@ from .const import (
 )
 from .entity_common import HubBackedEntity, setup_platform_from_types
 
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info(f"{thismodule} loaded")
 
 
 async def async_setup_entry(hass, entry, async_add_entities):

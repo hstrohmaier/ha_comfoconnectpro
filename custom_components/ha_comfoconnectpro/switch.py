@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import logging
 from typing import Optional, Any
 
@@ -8,7 +9,9 @@ from homeassistant.components.switch import SwitchEntity
 from .entity_common import HubBackedEntity, setup_platform_from_types
 from .const import BINARY_TYPES, MyBinaryEntityDescription
 
+thismodule = sys.modules[__name__]
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info(f"{thismodule} loaded")
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
