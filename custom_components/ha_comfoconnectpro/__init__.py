@@ -375,9 +375,14 @@ class MyModbusHub:
             self._write_modbus_registers, reg, reg_words, dt
         )
 
-        # 3) Daten neu lesen
-        _LOGGER.info("Schreibvorgang abgeschlossen. Löse Refresh-Zyklus aus.")
-        await self.async_refresh_modbus_data()
+        # Kein sofortiger Re-Read hier: Entities setzen ihren Wert bereits
+        # optimistisch selbst (siehe z. B. climate.py/number.py/switch.py).
+        # Ein Read direkt nach dem Write kann den Wert lesen, bevor das Gerät
+        # ihn intern übernommen hat, und würde die Entity dadurch kurzzeitig
+        # auf den alten Wert zurückspringen lassen (#23). Der reguläre,
+        # periodische Poll gleicht den tatsächlichen Gerätezustand ohnehin
+        # zeitnah ab.
+        _LOGGER.info("Schreibvorgang abgeschlossen.")
 
     async def setter_function_callback(self, entity: Entity, option):
         await self.write_entity_value(entity.entity_description.key, option)
