@@ -16,4 +16,4 @@
 ## [1.1.5] - 2026-05-09 Externer Sollwert als Zieltemperatur in Climate Entity ergänzt
 ## [1.1.6] - 2026-05-10 Taupunkt- und absolute Feuchtigkeitssensoren hinzugefügt
 ## [1.1.7] - 2026-05-29 Schreibfehler in write_coil/write_register behoben (slave-Parameter und Fehlerprüfung)
-
+## [1.1.8] - 2026-09-22 Einheit Volumenstrom auf m³/h geändert
