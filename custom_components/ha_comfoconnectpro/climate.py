@@ -31,6 +31,23 @@ from .const import (
 from .entity_common import HubBackedEntity, setup_platform_from_types
 
 thismodule = sys.modules[__name__]
+# Home Assistant 2026.11 introduced native_* climate temperature attributes and
+# deprecated the plain ones. Pick whichever names the running core supports.
+_HAS_NATIVE_TEMPS = hasattr(ClimateEntity, "native_current_temperature")
+_ATTR_CURRENT_TEMP = (
+    "_attr_native_current_temperature"
+    if _HAS_NATIVE_TEMPS
+    else "_attr_current_temperature"
+)
+_ATTR_TARGET_TEMP = (
+    "_attr_native_target_temperature"
+    if _HAS_NATIVE_TEMPS
+    else "_attr_target_temperature"
+)
+_ATTR_TEMP_UNIT = (
+    "_attr_native_temperature_unit" if _HAS_NATIVE_TEMPS else "_attr_temperature_unit"
+)
+
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.info(f"{thismodule} loaded")
 
@@ -71,7 +88,7 @@ class MyClimate(HubBackedEntity, ClimateEntity):
         self._attr_hvac_modes = [HVACMode.AUTO]
         self._attr_hvac_mode = HVACMode.AUTO
         self._attr_hvac_action = HVACAction.FAN
-        self._attr_temperature_unit = description.temperature_unit
+        setattr(self, _ATTR_TEMP_UNIT, description.temperature_unit)
         self._attr_supported_features = description.supported_features
         self._attr_preset_modes = [PRESET_AWAY, PRESET_SLEEP, PRESET_HOME, PRESET_BOOST]
         self._attr_preset_mode = PRESET_HOME
@@ -83,7 +100,7 @@ class MyClimate(HubBackedEntity, ClimateEntity):
     def _on_hub_update(self) -> None:
         supply_temp = self._hub.data.get(C_SUPPLY_TEMPERATURE)
         if supply_temp is not None:
-            self._attr_current_temperature = float(supply_temp)
+            setattr(self, _ATTR_CURRENT_TEMP, float(supply_temp))
 
         supply_hum = self._hub.data.get(C_SUPPLY_HUMIDITY)
         if supply_hum is not None:
@@ -104,7 +121,7 @@ class MyClimate(HubBackedEntity, ClimateEntity):
 
         setpoint = self._hub.data.get(C_EXTERNAL_SETPOINT)
         if setpoint is not None:
-            self._attr_target_temperature = float(setpoint)
+            setattr(self, _ATTR_TARGET_TEMP, float(setpoint))
 
         self.async_write_ha_state()
 
